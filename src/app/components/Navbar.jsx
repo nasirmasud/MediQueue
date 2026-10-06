@@ -69,7 +69,7 @@ const Navbar = () => {
                 <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md shadow-indigo-200/50">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight font-montserrat">
+                <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
                   MediQueue
                 </span>
               </Link>

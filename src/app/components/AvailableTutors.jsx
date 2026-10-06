@@ -7,7 +7,7 @@ const AvailableTutors = async () => {
   const tutors = await res.json();
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-50 transition-colors duration-200">
+    <div className="w-full bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-50 transition-colors duration-200">
 
       {/* Top Hero Heading Section */}
       <div className="py-12 text-center max-w-4xl mx-auto px-4">

@@ -72,7 +72,7 @@ const TutorCard = ({ tutor }) => {
       </div>
 
       {/* Bottom Row: Price & Booking Action */}
-      <div className="mt-6 pt-4  border-gray-100  flex items-center justify-between gap-2">
+      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-zinc-800 flex items-center justify-between gap-2">
         <div>
           <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Hourly Fee</p>
           <p className="text-lg font-black text-gray-900 dark:text-zinc-100 flex items-center">

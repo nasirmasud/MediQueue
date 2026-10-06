@@ -25,7 +25,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-base-100 border-t border-base-200 pt-12 pb-6 text-base-content transition-colors duration-300">
+    <footer className="bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 pt-12 pb-6 text-gray-900 dark:text-zinc-100 transition-colors duration-300">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 container">
 
         {/* Top Section: Brand, Links, Newsletter */}
@@ -40,7 +40,7 @@ export default function Footer() {
               <span className="text-xl font-bold text-primary tracking-tight">MediQueue</span>
             </div>
 
-            <p className="text-sm text-base-content/70 leading-relaxed max-w-[240px]">
+            <p className="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed max-w-[240px]">
               Your trusted platform to discover expert tutors and book personalized learning sessions online.
             </p>
 
@@ -51,7 +51,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-8 h-8 rounded-full bg-base-200 hover:bg-primary hover:text-white text-base-content/60 flex items-center justify-center transition-all"
+                  className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-primary hover:text-white text-gray-500 dark:text-zinc-400 flex items-center justify-center transition-all"
                 >
                   <Icon className="w-4 h-4" />
                 </Link>
@@ -62,7 +62,7 @@ export default function Footer() {
           {/* Dynamic Link Groups */}
           {Object.entries(footerLinks).map(([group, links]) => (
             <div key={group}>
-              <p className="text-sm font-bold text-base-content mb-4 uppercase tracking-widest">
+              <p className="text-sm font-bold text-gray-900 dark:text-zinc-100 mb-4 uppercase tracking-widest">
                 {group}
               </p>
               <ul className="space-y-2.5">
@@ -70,7 +70,7 @@ export default function Footer() {
                   <li key={link}>
                     <Link
                       href="#"
-                      className="text-sm text-base-content/60 hover:text-primary transition-colors"
+                      className="text-sm text-gray-500 dark:text-zinc-400 hover:text-primary transition-colors"
                     >
                       {link}
                     </Link>
@@ -82,10 +82,10 @@ export default function Footer() {
 
           {/* Newsletter Subscription */}
           <div className="col-span-2 md:col-span-2 lg:col-span-1">
-            <p className="text-sm font-bold text-base-content mb-2 uppercase tracking-widest">
+            <p className="text-sm font-bold text-gray-900 dark:text-zinc-100 mb-2 uppercase tracking-widest">
               Stay Updated
             </p>
-            <p className="text-sm text-base-content/60 mb-4">
+            <p className="text-sm text-gray-500 dark:text-zinc-400 mb-4">
               Subscribe to get tips and offers.
             </p>
             <form className="flex flex-col gap-2">
@@ -93,11 +93,11 @@ export default function Footer() {
                 type="email"
                 required
                 placeholder="Enter email"
-                className="w-full px-4 py-2 text-sm bg-base-200 border border-base-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-base-content"
+                className="w-full px-4 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-zinc-100"
               />
               <button
                 type="submit"
-                className="w-full px-4 py-2 bg-primary text-primary-content text-sm font-semibold rounded-lg hover:bg-primary-dark transition-all"
+                className="w-full px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-dark transition-all"
               >
                 Subscribe
               </button>
@@ -106,8 +106,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section: Copyright, Payments, Security */}
-        <div className="border-t border-base-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-sm text-base-content/50">
+        <div className="border-t border-gray-100 dark:border-zinc-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <p className="text-sm text-gray-400 dark:text-zinc-500">
             © {currentYear} <span className="font-semibold">MediQueue</span>. All rights reserved.
           </p>
 
@@ -124,8 +124,8 @@ export default function Footer() {
           </ul>
 
           {/* Security Badge */}
-          <div className="flex items-center gap-1.5 text-sm text-base-content/60 font-medium">
-            <IoShieldCheckmark className='text-success text-xl' />
+          <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-zinc-400 font-medium">
+            <IoShieldCheckmark className='text-emerald-500 text-xl' />
             Secure Payments
           </div>
         </div>

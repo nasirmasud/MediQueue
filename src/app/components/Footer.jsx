@@ -1,78 +1,73 @@
-import { BookOpen } from 'lucide-react'
-import Image from 'next/image'
+import { BadgeCheck, BookOpen, Lock } from 'lucide-react'
 import Link from 'next/link'
-import { FaFacebook, FaInstagram, FaLinkedin, FaXTwitter, FaYoutube } from 'react-icons/fa6'
-import { IoShieldCheckmark } from 'react-icons/io5'
+import NewsletterForm from './NewsletterForm'
 
-const footerLinks = {
-  Platform: ['Browse Tutors', 'How It Works', 'Pricing', 'FAQs'],
-  'My Account': ['My Bookings', 'My Sessions', 'Messages', 'Profile Settings'],
-  'For Tutors': ['Become a Tutor', 'Tutor Login', 'Resources', 'Help Center'],
-  Company: ['About Us', 'Blog', 'Contact Us', 'Terms & Conditions', 'Privacy Policy'],
-}
-
-const SocialIcons = [
-  { Icon: FaFacebook, label: 'Facebook', href: '#' },
-  { Icon: FaXTwitter, label: 'Twitter', href: '#' },
-  { Icon: FaInstagram, label: 'Instagram', href: '#' },
-  { Icon: FaLinkedin, label: 'LinkedIn', href: '#' },
-  { Icon: FaYoutube, label: 'YouTube', href: '#' },
+const footerColumns = [
+  {
+    heading: 'Platform',
+    links: [
+      { label: 'Browse Tutors', href: '/tutors' },
+      { label: 'How It Works', href: '/#how-it-works' },
+    ],
+  },
+  {
+    heading: 'My Account',
+    links: [
+      { label: 'Booked Sessions', href: '/booked-sessions' },
+      { label: 'Saved Mentors', href: '/my-tutors' },
+      { label: 'Student Portal', href: '/profile' },
+    ],
+  },
+  {
+    heading: 'For Tutors',
+    links: [{ label: 'Apply as Mentor', href: '/add-tutor' }],
+  },
 ]
 
-const paymentMethods = [{ name: 'bkash', src: '/bkash.png' }, { name: 'nagad', src: '/nagad.png' }, { name: 'rocket', src: '/rocket.svg' }, { name: 'vias', src: '/visa.svg' }, { name: 'master', src: '/master.svg' }]
+const paymentMethods = ['bKash', 'Nagad', 'Rocket', 'VISA', 'Mastercard']
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 pt-12 pb-6 text-gray-900 dark:text-zinc-100 transition-colors duration-300">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 container">
+    <footer className="w-full bg-surface-container-lowest shadow-edge-bottom pt-16 pb-12">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 pb-12">
 
-        {/* Top Section: Brand, Links, Newsletter */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-10">
-
-          {/* Brand & Socials */}
-          <div className="col-span-2">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-md">
-                <BookOpen className="w-4 h-4 text-white" />
+          {/* Brand */}
+          <div className="lg:col-span-2 space-y-4">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-on-primary-container" />
               </div>
-              <span className="text-xl font-bold text-primary tracking-tight">MediQueue</span>
-            </div>
+              <span className="text-headline-sm tracking-tight text-on-surface">
+                MediQueue
+              </span>
+            </Link>
 
-            <p className="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed max-w-[240px]">
-              Your trusted platform to discover expert tutors and book personalized learning sessions online.
+            <p className="text-body-sm text-on-surface-variant max-w-sm">
+              Bangladesh&apos;s dedicated medical clinical tutoring marketplace. Connecting MBBS
+              students with verified residents, registrars, and viva-tested mentors across premier
+              medical colleges.
             </p>
 
-            {/* Social Icons */}
-            <div className="flex items-center gap-3 mt-6">
-              {SocialIcons.map(({ Icon, label, href }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-primary hover:text-white text-gray-500 dark:text-zinc-400 flex items-center justify-center transition-all"
-                >
-                  <Icon className="w-4 h-4" />
-                </Link>
-              ))}
+            <div className="pt-2">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high text-tertiary text-label-sm">
+                <BadgeCheck className="w-4 h-4" />
+                BMDC Verified Mentors &amp; Secure Escrow
+              </span>
             </div>
           </div>
 
-          {/* Dynamic Link Groups */}
-          {Object.entries(footerLinks).map(([group, links]) => (
-            <div key={group}>
-              <p className="text-sm font-bold text-gray-900 dark:text-zinc-100 mb-4 uppercase tracking-widest">
-                {group}
-              </p>
-              <ul className="space-y-2.5">
+          {/* Link Groups */}
+          {footerColumns.map(({ heading, links }) => (
+            <div key={heading} className="space-y-3">
+              <h4 className="text-label-lg text-on-surface">{heading}</h4>
+              <ul className="space-y-2 text-body-sm text-on-surface-variant">
                 {links.map((link) => (
-                  <li key={link}>
-                    <Link
-                      href="#"
-                      className="text-sm text-gray-500 dark:text-zinc-400 hover:text-primary transition-colors"
-                    >
-                      {link}
+                  <li key={link.label}>
+                    <Link href={link.href} className="hover:text-on-surface transition-colors">
+                      {link.label}
                     </Link>
                   </li>
                 ))}
@@ -80,56 +75,41 @@ export default function Footer() {
             </div>
           ))}
 
-          {/* Newsletter Subscription */}
-          <div className="col-span-2 md:col-span-2 lg:col-span-1">
-            <p className="text-sm font-bold text-gray-900 dark:text-zinc-100 mb-2 uppercase tracking-widest">
-              Stay Updated
+          {/* Newsletter */}
+          <div className="space-y-3">
+            <h4 className="text-label-lg text-on-surface">Stay Updated</h4>
+            <p className="text-body-sm text-on-surface-variant">
+              Weekly clinical case discussions, ward tips, and viva scheduling updates.
             </p>
-            <p className="text-sm text-gray-500 dark:text-zinc-400 mb-4">
-              Subscribe to get tips and offers.
-            </p>
-            <form className="flex flex-col gap-2">
-              <input
-                type="email"
-                required
-                placeholder="Enter email"
-                className="w-full px-4 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-zinc-100"
-              />
-              <button
-                type="submit"
-                className="w-full px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-dark transition-all"
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
 
-        {/* Bottom Section: Copyright, Payments, Security */}
-        <div className="border-t border-gray-100 dark:border-zinc-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-sm text-gray-400 dark:text-zinc-500">
-            © {currentYear} <span className="font-semibold">MediQueue</span>. All rights reserved.
-          </p>
-
-          {/* Payment Badges */}
-          <ul className="flex flex-wrap items-center justify-center gap-2">
+        {/* Bottom bar */}
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-label-sm text-outline uppercase">Supported Payments</span>
             {paymentMethods.map((method) => (
-              <li
-                key={method.name}
-                className="bg-transparent  px-2 py-1 rounded"
+              <span
+                key={method}
+                className="px-2.5 py-1 rounded bg-surface-container text-label-sm text-on-surface-variant font-bold"
               >
-                <Image src={method.src} alt={method.name} width={48} height={48} className='object-contain h-6 w-auto' />
-              </li>
+                {method}
+              </span>
             ))}
-          </ul>
+          </div>
 
-          {/* Security Badge */}
-          <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-zinc-400 font-medium">
-            <IoShieldCheckmark className='text-emerald-500 text-xl' />
-            Secure Payments
+          <div className="flex items-center gap-2 text-label-sm text-tertiary bg-surface-container px-3 py-1.5 rounded-full">
+            <Lock className="w-4 h-4" />
+            <span>SSL 256-Bit Encrypted Payments</span>
           </div>
         </div>
 
+        <div className="mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-body-sm text-outline">
+          <div>
+            &copy; {currentYear} MediQueue Bangladesh Ltd. Clinical Excellence. All rights reserved.
+          </div>
+        </div>
       </div>
     </footer>
   )

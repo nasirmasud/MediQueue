@@ -58,7 +58,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className='min-h-full flex flex-col pb-20 xl:pb-0'>
         <Navbar />
-        {children}
+        <main className='w-full flex-1 pt-16'>{children}</main>
         <Footer />
         <BottomNav />
         <Toaster />

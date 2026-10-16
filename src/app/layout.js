@@ -1,5 +1,6 @@
 import { JetBrains_Mono, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import BottomNav from "./components/BottomNav";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import "./globals.css";
@@ -55,10 +56,11 @@ export default function RootLayout({ children }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className='min-h-full flex flex-col'>
+      <body className='min-h-full flex flex-col pb-20 xl:pb-0'>
         <Navbar />
         {children}
         <Footer />
+        <BottomNav />
         <Toaster />
       </body>
     </html>

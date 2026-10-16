@@ -1,22 +1,318 @@
+/* MediQueue — Clinical Indigo token layer. Source of truth: code.html.
+   Two tiers: --mq-* holds the values, @theme inline maps them to utilities.
+   .dark re-points --mq-* so one utility serves both themes, no dark: variants. */
+
 @import "tailwindcss";
 @import "@heroui/styles";
-@plugin "daisyui";
 
-@theme {
-  --color-primary: #4f46e5;
+/* Class-driven dark, matching code.html's darkMode:"class". Overrides HeroUI's
+   variant, whose prefers-color-scheme fallback would beat an explicit light
+   choice. layout.js folds the system preference into these selectors pre-paint. */
+@custom-variant dark (&:is(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-surface: var(--mq-surface);
+  --color-surface-dim: var(--mq-surface-dim);
+  --color-surface-bright: var(--mq-surface-bright);
+  --color-surface-container-lowest: var(--mq-surface-container-lowest);
+  --color-surface-container-low: var(--mq-surface-container-low);
+  --color-surface-container: var(--mq-surface-container);
+  --color-surface-container-high: var(--mq-surface-container-high);
+  --color-surface-container-highest: var(--mq-surface-container-highest);
+  --color-surface-variant: var(--mq-surface-variant);
+  --color-on-surface: var(--mq-on-surface);
+  --color-on-surface-variant: var(--mq-on-surface-variant);
+  --color-inverse-surface: var(--mq-inverse-surface);
+  --color-inverse-on-surface: var(--mq-inverse-on-surface);
+  --color-outline: var(--mq-outline);
+  --color-outline-variant: var(--mq-outline-variant);
+  --color-surface-tint: var(--mq-surface-tint);
+
+  --color-primary: var(--mq-primary);
+  --color-on-primary: var(--mq-on-primary);
+  --color-primary-container: var(--mq-primary-container);
+  --color-on-primary-container: var(--mq-on-primary-container);
+  --color-inverse-primary: var(--mq-inverse-primary);
+  --color-primary-fixed: var(--mq-primary-fixed);
+  --color-primary-fixed-dim: var(--mq-primary-fixed-dim);
+  --color-on-primary-fixed: var(--mq-on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--mq-on-primary-fixed-variant);
+
+  --color-secondary: var(--mq-secondary);
+  --color-on-secondary: var(--mq-on-secondary);
+  --color-secondary-container: var(--mq-secondary-container);
+  --color-on-secondary-container: var(--mq-on-secondary-container);
+  --color-secondary-fixed: var(--mq-secondary-fixed);
+  --color-secondary-fixed-dim: var(--mq-secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--mq-on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--mq-on-secondary-fixed-variant);
+
+  --color-tertiary: var(--mq-tertiary);
+  --color-on-tertiary: var(--mq-on-tertiary);
+  --color-tertiary-container: var(--mq-tertiary-container);
+  --color-on-tertiary-container: var(--mq-on-tertiary-container);
+  --color-tertiary-fixed: var(--mq-tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--mq-tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--mq-on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--mq-on-tertiary-fixed-variant);
+
+  --color-error: var(--mq-error);
+  --color-on-error: var(--mq-on-error);
+  --color-error-container: var(--mq-error-container);
+  --color-on-error-container: var(--mq-on-error-container);
+
+  --color-background: var(--mq-background);
+  --color-on-background: var(--mq-on-background);
+
   --color-primary-dark: #3730a3;
-  --color-navy: #1e1b4b;
-  --font-sans: var(--font-plus-jakarta), sans-serif;
+
+  --font-sans: var(--mq-font-sans);
+  --font-display: var(--mq-font-display);
+  --font-mono: var(--mq-font-mono);
+}
+
+/* Non-color tokens. static so every one is emitted and stays var()-addressable. */
+@theme static {
+  --text-display-lg: 34px;
+  --text-display-lg--line-height: 42px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 800;
+
+  --text-headline-lg: 26px;
+  --text-headline-lg--line-height: 34px;
+  --text-headline-lg--letter-spacing: -0.015em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: 20px;
+  --text-headline-md--line-height: 28px;
+  --text-headline-md--letter-spacing: -0.01em;
+  --text-headline-md--font-weight: 700;
+
+  --text-headline-sm: 17px;
+  --text-headline-sm--line-height: 24px;
+  --text-headline-sm--font-weight: 600;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 13px;
+  --text-body-sm--line-height: 18px;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-lg: 14px;
+  --text-label-lg--line-height: 20px;
+  --text-label-lg--letter-spacing: 0.01em;
+  --text-label-lg--font-weight: 600;
+
+  --text-label-md: 12px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--letter-spacing: 0.02em;
+  --text-label-md--font-weight: 600;
+
+  --text-label-sm: 10px;
+  --text-label-sm--line-height: 14px;
+  --text-label-sm--letter-spacing: 0.04em;
+  --text-label-sm--font-weight: 700;
+
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 0.75rem;
+  --spacing-space-lg: 1rem;
+  --spacing-space-xl: 1.5rem;
+  --spacing-gutter: 1rem;
+  --spacing-margin: 1rem;
+
+  --shadow-edge-top: 0 1px 8px rgba(0, 0, 0, 0.04);
+  --shadow-edge-bottom: 0 -1px 8px rgba(0, 0, 0, 0.04);
+  --shadow-beacon: 0 0 8px #68dba9;
+
+  --ease-mq: cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-beacon: beacon 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 :root {
-  --primary: #4f46e5;
-  --primary-dark: #3730a3;
-  --navy: #1e1b4b;
+  --mq-font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --mq-font-display: var(--font-space-grotesk), var(--font-jakarta), ui-sans-serif, sans-serif;
+  --mq-font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Light ramp is a tonal lift of dark, hue held violet-grey. No doc defines it.
+     Each light container takes the pairing the dark set already ships as the
+     corresponding *-fixed / on-*-fixed value, so the accents are not invented. */
+  --mq-surface: #fafafa;
+  --mq-surface-dim: #fafafa;
+  --mq-surface-bright: #ffffff;
+  --mq-surface-container-lowest: #ffffff;
+  --mq-surface-container-low: #f4f4f5;
+  --mq-surface-container: #ededee;
+  --mq-surface-container-high: #e4e4e7;
+  --mq-surface-container-highest: #d4d4d8;
+  --mq-surface-variant: #e4e4e7;
+  --mq-on-surface: #1c1b1d;
+  --mq-on-surface-variant: #4b4a56;
+  --mq-inverse-surface: #201f22;
+  --mq-inverse-on-surface: #f4f4f5;
+  --mq-outline: #767480;
+  --mq-outline-variant: #c7c4d8;
+  --mq-surface-tint: #4f46e5;
+
+  --mq-primary: #4f46e5;
+  --mq-on-primary: #ffffff;
+  --mq-primary-container: #4f46e5;
+  --mq-on-primary-container: #e2dfff;
+  --mq-inverse-primary: #c3c0ff;
+  --mq-primary-fixed: #e2dfff;
+  --mq-primary-fixed-dim: #c3c0ff;
+  --mq-on-primary-fixed: #0f0069;
+  --mq-on-primary-fixed-variant: #3323cc;
+
+  --mq-secondary: #571bc1;
+  --mq-on-secondary: #ffffff;
+  --mq-secondary-container: #e9ddff;
+  --mq-on-secondary-container: #23005c;
+  --mq-secondary-fixed: #e9ddff;
+  --mq-secondary-fixed-dim: #d0bcff;
+  --mq-on-secondary-fixed: #23005c;
+  --mq-on-secondary-fixed-variant: #5516be;
+
+  --mq-tertiary: #006e4c;
+  --mq-on-tertiary: #ffffff;
+  --mq-tertiary-container: #85f8c4;
+  --mq-on-tertiary-container: #002114;
+  --mq-tertiary-fixed: #85f8c4;
+  --mq-tertiary-fixed-dim: #68dba9;
+  --mq-on-tertiary-fixed: #002114;
+  --mq-on-tertiary-fixed-variant: #005137;
+
+  --mq-error: #93000a;
+  --mq-on-error: #ffffff;
+  --mq-error-container: #ffdad6;
+  --mq-on-error-container: #690005;
+
+  --mq-background: #fafafa;
+  --mq-on-background: #1c1b1d;
+
+  color-scheme: light;
+}
+
+.dark,
+[data-theme="dark"] {
+  --mq-surface: #131315;
+  --mq-surface-dim: #131315;
+  --mq-surface-bright: #39393b;
+  --mq-surface-container-lowest: #0e0e10;
+  --mq-surface-container-low: #1c1b1d;
+  --mq-surface-container: #201f22;
+  --mq-surface-container-high: #2a2a2c;
+  --mq-surface-container-highest: #353437;
+  --mq-surface-variant: #353437;
+  --mq-on-surface: #e5e1e4;
+  --mq-on-surface-variant: #c7c4d8;
+  --mq-inverse-surface: #e5e1e4;
+  --mq-inverse-on-surface: #313032;
+  --mq-outline: #918fa1;
+  --mq-outline-variant: #464555;
+  --mq-surface-tint: #c3c0ff;
+
+  --mq-primary: #c3c0ff;
+  --mq-on-primary: #1d00a5;
+  --mq-primary-container: #4f46e5;
+  --mq-on-primary-container: #dad7ff;
+  --mq-inverse-primary: #4d44e3;
+  --mq-primary-fixed: #e2dfff;
+  --mq-primary-fixed-dim: #c3c0ff;
+  --mq-on-primary-fixed: #0f0069;
+  --mq-on-primary-fixed-variant: #3323cc;
+
+  --mq-secondary: #d0bcff;
+  --mq-on-secondary: #3c0091;
+  --mq-secondary-container: #571bc1;
+  --mq-on-secondary-container: #c4abff;
+  --mq-secondary-fixed: #e9ddff;
+  --mq-secondary-fixed-dim: #d0bcff;
+  --mq-on-secondary-fixed: #23005c;
+  --mq-on-secondary-fixed-variant: #5516be;
+
+  --mq-tertiary: #68dba9;
+  --mq-on-tertiary: #003825;
+  --mq-tertiary-container: #006e4c;
+  --mq-on-tertiary-container: #7df1bd;
+  --mq-tertiary-fixed: #85f8c4;
+  --mq-tertiary-fixed-dim: #68dba9;
+  --mq-on-tertiary-fixed: #002114;
+  --mq-on-tertiary-fixed-variant: #005137;
+
+  --mq-error: #ffb4ab;
+  --mq-on-error: #690005;
+  --mq-error-container: #93000a;
+  --mq-on-error-container: #ffdad6;
+
+  --mq-background: #131315;
+  --mq-on-background: #e5e1e4;
+
+  color-scheme: dark;
 }
 
 body {
-  font-family: var(--font-sans);
-  color: var(--color-base-content);
-  background-color: var(--color-base-100);
+  font-family: var(--mq-font-sans);
+  color: var(--mq-on-surface);
+  background-color: var(--mq-surface);
+}
+
+@keyframes beacon {
+  0% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility card-lift {
+  transition: all 300ms var(--ease-mq);
+  &:hover {
+    transform: translateY(-0.25rem);
+  }
+}
+
+@utility hero-ambience {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@utility hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  filter: blur(140px);
+}
+
+@utility hero-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: radial-gradient(var(--mq-surface-tint) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

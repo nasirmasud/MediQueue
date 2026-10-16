@@ -42,7 +42,7 @@ export default function HowItWorks() {
               2. Select Date & Book
             </h3>
             <p className="text-sm text-gray-500 dark:text-zinc-400 font-normal leading-relaxed">
-              Check the tutor's real-time availability start date, fill in your information, and securely request a custom session.
+              Check the tutor&apos;s real-time availability start date, fill in your information, and securely request a custom session.
             </p>
           </div>
 

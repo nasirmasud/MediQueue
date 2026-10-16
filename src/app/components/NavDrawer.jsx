@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { cn } from "@/components/ui/cn";
 
 export function NavDrawer({
+  id,
   open,
   onClose,
   title = "MediQueue",
@@ -35,6 +36,7 @@ export function NavDrawer({
 
   return (
     <div
+      id={id}
       className={cn(
         "fixed inset-0 z-[9999] xl:hidden transition-opacity duration-300",
         open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"

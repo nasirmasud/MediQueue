@@ -1,8 +1,8 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
+import { Avatar } from '@/components/ui/Avatar';
 import UserProfileDropdown from '@/app/components/UserProfileDropdown';
-import { Avatar } from '@heroui/react';
 import { BookOpen, LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -50,13 +50,6 @@ const Navbar = () => {
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : 'unset';
   }, [mobileOpen]);
-
-  const getFallbackName = () => {
-    if (user?.name) {
-      return user.name.trim().charAt(0).toUpperCase();
-    }
-    return 'M';
-  };
 
   return (
     <>
@@ -180,10 +173,13 @@ const Navbar = () => {
               {user ? (
                 <>
                   <div className="flex items-center gap-3">
-                    <Avatar>
-                      <Avatar.Image alt={user?.name || "User"} src={user?.image} referrerPolicy='no-referrer' />
-                      <Avatar.Fallback>{getFallbackName()}</Avatar.Fallback>
-                    </Avatar>
+                    <Avatar
+                      src={user?.image}
+                      name={user?.name}
+                      alt={user?.name || "User"}
+                      size='sm'
+                      referrerPolicy='no-referrer'
+                    />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user?.name}</p>
                     </div>

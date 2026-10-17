@@ -1,12 +1,15 @@
+import { Card } from "@/components/ui/Card";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Section } from "@/components/ui/Section";
+import { Button } from "@/components/ui/Button";
 import { auth } from "@/lib/auth";
 import { createPageMetadata, PAGE_TITLES } from "@/lib/site-metadata";
-
-export const metadata = createPageMetadata(PAGE_TITLES.myTutors);
-import { ArrowRight, Inbox, Mail } from "lucide-react";
+import { Inbox, Mail, Plus } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import MyTutorsList from "../components/MyTutorsList";
 
+export const metadata = createPageMetadata(PAGE_TITLES.myTutors);
 
 export default async function MyTutorsPage() {
   const session = await auth.api.getSession({
@@ -14,59 +17,70 @@ export default async function MyTutorsPage() {
   });
   const user = session?.user;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors`);
-  const allTutors = await res.json();
-  const myTutors = allTutors.filter((tutor) => tutor.email === user?.email);
+  let myTutors = [];
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors`);
+    const data = res.ok ? await res.json() : null;
+    if (Array.isArray(data)) {
+      myTutors = data.filter((tutor) => tutor.email === user?.email);
+    }
+  } catch {
+    myTutors = [];
+  }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-zinc-950 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
-      <div className="max-w-4xl mx-auto">
+    <Section tone="surface" spacing="lg">
+      <div className="mx-auto w-full max-w-5xl">
+        <Card padding="lg" shadow="md">
+          <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
+            <div className="min-w-0">
+              <Eyebrow>Mentor Studio</Eyebrow>
+              <h1 className="mt-3 text-headline-lg text-on-surface">My Created Tutors</h1>
+              <p className="mt-1 flex items-center justify-center gap-1.5 text-body-md text-on-surface-variant sm:justify-start">
+                <Mail aria-hidden="true" className="size-4 shrink-0" />
+                <span className="truncate">{user?.email}</span>
+              </p>
+            </div>
 
-        {/* Header */}
-        <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 border border-gray-100 dark:border-zinc-800 shadow-sm mb-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">
-              My Created Tutors
-            </h1>
-            <p className="text-sm text-gray-500 dark:text-zinc-400 font-normal flex items-center gap-1.5 mt-0.5">
-              <Mail className="w-3.5 h-3.5" /> {user?.email}
-            </p>
+            <div className="shrink-0 rounded-2xl bg-primary-container/10 px-6 py-3 text-center">
+              <p className="text-label-sm uppercase text-primary">Total Added</p>
+              <p className="mt-0.5 text-display-lg text-primary tabular">
+                {myTutors.length}
+              </p>
+            </div>
           </div>
-          <div className="px-6 py-3 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 rounded-2xl">
-            <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-center">Total Added</p>
-            <p className="text-3xl font-black text-indigo-600 dark:text-indigo-400 text-center mt-0.5">{myTutors.length}</p>
-          </div>
-        </div>
+        </Card>
 
-        {/* Main */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-4">
-            <h2 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              Manage Your Tutor Profiles
-            </h2>
-            <Link href="/add-tutors" className="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition-all shadow-sm">
-              + Add New Tutor
-            </Link>
+        <div className="mt-8 space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-outline-variant/30 pb-4">
+            <h2 className="text-headline-md text-on-surface">Manage Your Tutor Profiles</h2>
+            <Button as={Link} href="/add-tutor" variant="outline" size="sm">
+              <Plus aria-hidden="true" className="size-4" />
+              Add New Tutor
+            </Button>
           </div>
 
           {myTutors.length === 0 ? (
-            <div className="bg-white dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800/80 p-12 flex flex-col items-center justify-center text-center shadow-sm">
-              <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mb-4">
-                <Inbox className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-black text-gray-900 dark:text-white">No Tutors Created Yet!</h3>
-              <p className="text-sm text-gray-400 dark:text-zinc-500 max-w-sm mt-1.5 leading-relaxed">
-                You haven&apos;t added any tutor listings yet.
+            <Card padding="none" shadow="sm" className="p-12 text-center">
+              <span className="mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl bg-primary-container/10 text-primary">
+                <Inbox aria-hidden="true" className="size-8" />
+              </span>
+              <h3 className="text-headline-sm text-on-surface">No tutors created yet</h3>
+              <p className="mx-auto mt-1.5 max-w-sm text-body-md text-on-surface-variant">
+                Publish your first listing and students on MediQueue can book sessions
+                with you.
               </p>
-              <Link href="/add-tutors" className="inline-flex items-center gap-1.5 mt-6 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition-all shadow-md group">
-                Create First Listing <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </div>
+              <Button as={Link} href="/add-tutor" className="mt-6">
+                <Plus aria-hidden="true" className="size-4" />
+                Create First Listing
+              </Button>
+            </Card>
           ) : (
             <MyTutorsList initialTutors={myTutors} />
           )}
         </div>
       </div>
-    </div>
+    </Section>
   );
 }

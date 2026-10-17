@@ -19,7 +19,7 @@ export function Eyebrow({
   return (
     <Component
       className={cn(
-        "inline-flex items-center gap-1.5 text-label-sm uppercase",
+        "inline-flex items-center gap-1.5 text-label-sm uppercase tracking-wider",
         TONES[tone] ?? TONES.primary,
         className
       )}

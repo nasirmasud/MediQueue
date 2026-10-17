@@ -1,93 +1,84 @@
-"use client";
+import { BadgeCheck, CalendarDays, CircleCheck, CircleX, Clock } from "lucide-react";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Section } from "@/components/ui/Section";
+import { COMPARISON_ROWS, WHY_FEATURES } from "@/lib/demo";
 
-import { Award, Clock, ShieldCheck, Users } from "lucide-react";
+const ICONS = {
+  verified: BadgeCheck,
+  calendar_month: CalendarDays,
+  schedule: Clock,
+};
+
+const TILE_TONES = {
+  tertiary: "bg-tertiary-container/30 text-tertiary",
+  primary: "bg-primary-container/30 text-primary",
+  secondary: "bg-secondary-container/30 text-secondary",
+};
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 bg-white dark:bg-zinc-900 border-t border-b-2 border-gray-100 dark:border-zinc-800 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <Section tone='lowest' spacing='lg'>
+      <div className='grid grid-cols-1 lg:grid-cols-12 gap-12 items-center'>
+        <div className='lg:col-span-5 flex flex-col gap-6'>
+          <Eyebrow>The MediQueue Standard</Eyebrow>
+          <h2 className='text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight leading-tight'>
+            Premium Medical Mentorship, Made Simple &amp; Secure.
+          </h2>
+          <p className='text-body-md text-on-surface-variant'>
+            MediQueue is engineered specifically to eliminate unverified coaching risks,
+            schedule clashes, and unrecorded lectures for MBBS students nationwide.
+          </p>
+          <div className='space-y-4 pt-2'>
+            {WHY_FEATURES.map((feature) => {
+              const Icon = ICONS[feature.icon];
+              return (
+                <div key={feature.title} className='flex items-start gap-3'>
+                  <div
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                      TILE_TONES[feature.iconTone] ?? TILE_TONES.primary
+                    }`}
+                  >
+                    {Icon ? <Icon aria-hidden='true' className='size-[18px]' /> : null}
+                  </div>
+                  <div>
+                    <h4 className='text-headline-sm text-on-surface'>{feature.title}</h4>
+                    <p className='text-body-sm text-on-surface-variant'>{feature.copy}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-          {/* Left Text Column */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 w-fit">
-              <Award className="w-3.5 h-3.5" /> Why MediQueue?
-            </div>
-            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl tracking-tight leading-tight">
-              Premium Medical Mentorship, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">
-                Made Simple & Secure.
-              </span>
-            </h2>
-            <p className="text-base text-gray-500 dark:text-zinc-400 font-normal leading-relaxed">
-              MediQueue is built specifically to bridge the gap between medical aspirants and top-tier clinical experts. We enforce authentic identity verification and seamless workflows so you can focus entirely on learning.
-            </p>
-
-            {/* Features Bullet List */}
-            <div className="space-y-3.5 pt-2">
-              <div className="flex items-start gap-3">
-                <div className="mt-1 p-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-lg">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">Strict Identity Verification</h4>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400 font-normal">Tutors from top medical institutions (DMC, CMC, SSMC) are manually verified.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="mt-1 p-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-lg">
-                  <Clock className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">Real-Time Dynamic Slots</h4>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400 font-normal">No overlapping appointment bookings. Schedules update dynamically instantly.</p>
-                </div>
-              </div>
+        <div className='lg:col-span-7 rounded-2xl bg-surface-container-low p-6 sm:p-8 shadow-xl'>
+          <div className='flex items-center justify-between pb-4'>
+            <span className='text-headline-sm text-on-surface'>Feature Breakdown</span>
+            <div className='flex items-center gap-6 text-label-md'>
+              <span className='text-primary font-bold'>MediQueue</span>
+              <span className='text-outline'>Unverified Coaching</span>
             </div>
           </div>
-
-          {/* Right Stats Grid Column */}
-          <div className="grid grid-cols-2 gap-6">
-
-            {/* Card 1 */}
-            <div className="p-6 bg-gray-50 dark:bg-zinc-950 border border-gray-100 dark:border-zinc-900 rounded-3xl text-center space-y-2">
-              <div className="flex justify-center text-indigo-600 dark:text-indigo-400 mb-1">
-                <Users className="w-6 h-6" />
+          <div className='space-y-4 pt-4 text-body-sm'>
+            {COMPARISON_ROWS.map((row) => (
+              <div key={row.label} className='flex items-center justify-between py-2'>
+                <span className='text-on-surface'>{row.label}</span>
+                <div className='flex items-center gap-12'>
+                  {row.ours ? (
+                    <CircleCheck aria-hidden='true' className='size-5 text-tertiary' />
+                  ) : (
+                    <CircleX aria-hidden='true' className='size-5 text-outline' />
+                  )}
+                  {row.theirs ? (
+                    <CircleCheck aria-hidden='true' className='size-5 text-tertiary' />
+                  ) : (
+                    <CircleX aria-hidden='true' className='size-5 text-outline' />
+                  )}
+                </div>
               </div>
-              <p className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">50+</p>
-              <p className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Verified Experts</p>
-            </div>
-
-            {/* Card 2 */}
-            <div className="p-6 bg-gray-50 dark:bg-zinc-950 border border-gray-100 dark:border-zinc-900 rounded-3xl text-center space-y-2">
-              <div className="flex justify-center text-indigo-600 dark:text-indigo-400 mb-1">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <p className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">100%</p>
-              <p className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Secure Sessions</p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="p-6 bg-gray-50 dark:bg-zinc-950 border border-gray-100 dark:border-zinc-900 rounded-3xl text-center space-y-2">
-              <div className="flex justify-center text-indigo-600 dark:text-indigo-400 mb-1">
-                <Award className="w-6 h-6" />
-              </div>
-              <p className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">1.5k+</p>
-              <p className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Sessions Mentored</p>
-            </div>
-
-            {/* Card 4 */}
-            <div className="p-6 bg-gray-50 dark:bg-zinc-950 border border-gray-100 dark:border-zinc-900 rounded-3xl text-center space-y-2">
-              <div className="flex justify-center text-indigo-600 dark:text-indigo-400 mb-1">
-                <Clock className="w-6 h-6" />
-              </div>
-              <p className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">24/7</p>
-              <p className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Flexible Access</p>
-            </div>
-
+            ))}
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

@@ -257,15 +257,16 @@ Three files only. The other 10 import sites keep HeroUI until Phase 10.
 
 **Exit criterion:** home page renders with zero HeroUI imports. HeroUI stays installed.
 
-The remaining HeroUI conversions are folded into each page's own phase:
+The remaining HeroUI conversions were folded into each page's own phase. All of them
+landed in Phase 10, so `src/` now has zero HeroUI imports:
 
-- [ ] `tutors/page.jsx` — HeroUI `Input` → primitive (Phase 10)
-- [ ] `tutors/[id]/page.jsx` — HeroUI `Card`/`Chip` → primitives (Phase 10)
-- [ ] `BookingModal.jsx` — HeroUI `Button`/`DateField`/`Label` → primitives (Phase 10)
-- [ ] `BookingCancelAlert.jsx` — HeroUI `AlertDialog`/`Button` → primitives (Phase 10)
-- [ ] `sign-in` / `sign-up` — HeroUI form components → primitives (Phase 10)
-- [ ] `profile` / `add-tutor` — HeroUI → primitives (Phase 10)
-- [ ] `components/UserProfileDropdown.jsx` — HeroUI `Dropdown` → custom popover (Phase 10)
+- [x] `tutors/page.jsx` — HeroUI `Input` → primitive (Phase 10)
+- [x] `tutors/[id]/page.jsx` — HeroUI `Card`/`Chip` → primitives (Phase 10)
+- [x] `BookingModal.jsx` — HeroUI `Button`/`DateField`/`Label` → primitives (Phase 10)
+- [x] `BookingCancelAlert.jsx` — HeroUI `AlertDialog`/`Button` → primitives (Phase 10)
+- [x] `sign-in` / `sign-up` — HeroUI form components → primitives (Phase 10)
+- [x] `profile` / `add-tutor` — HeroUI → primitives (Phase 10)
+- [x] `components/UserProfileDropdown.jsx` — HeroUI `Dropdown` → custom popover (Phase 10)
 
 ---
 
@@ -362,22 +363,59 @@ Nine new components, all from `content.js`, all matching `code.html` verbatim:
 
 ## Phase 10 — Remaining pages (HeroUI converted as each is touched)
 
-- [ ] `tutors/page.jsx` — retheme to the §2 filter bar + pills; try/catch so `loading`
+> **Status: COMPLETE.** `npm run lint` clean, `npm run build` passes, 11 routes.
+> **`src/` is now free of every HeroUI, `react-icons`, `@gravity-ui/icons`, `swiper`
+> and `@internationalized/date` import.** Phase 11 is unblocked.
+
+- [x] `tutors/page.jsx` — retheme to the §2 filter bar + pills; try/catch so `loading`
       can't stick `true`; real empty/loading states. HeroUI `Input` → primitive
-- [ ] `tutors/[id]/page.jsx` — retheme profile, stats, sticky booking card.
+- [x] `tutors/[id]/page.jsx` — retheme profile, stats, sticky booking card.
       HeroUI `Card`/`Chip` → primitives
-- [ ] `BookingModal.jsx` → frosted bottom sheet on mobile / modal on desktop.
+- [x] `BookingModal.jsx` → frosted bottom sheet on mobile / modal on desktop.
       HeroUI `Button`/`DateField`/`Label` → primitives. Logic untouched
-- [ ] `BookingCancelAlert.jsx` — retoken; fix unedited HeroUI boilerplate copy
+- [x] `BookingCancelAlert.jsx` — retoken; fix unedited HeroUI boilerplate copy
       ("My Awesome Project")
-- [ ] `sign-in/page.jsx`, `sign-up/page.jsx` — retoken, keep validation logic.
+- [x] `sign-in/page.jsx`, `sign-up/page.jsx` — retoken, keep validation logic.
       Swap `@gravity-ui/icons` for lucide
-- [ ] `profile/page.jsx` — retoken. HeroUI `Avatar`/`Card` → primitives
-- [ ] `add-tutor/page.jsx` — retoken. HeroUI → primitives
-- [ ] `my-tutors/page.jsx` — fix broken `/add-tutors` → `/add-tutor` link (lines 47, 61)
-- [ ] `components/MyTutorsList.jsx` — biggest change: raw `<input>`/`<button>` and
+- [x] `profile/page.jsx` — retoken. HeroUI `Avatar`/`Card` → primitives
+- [x] `add-tutor/page.jsx` — retoken. HeroUI → primitives
+- [x] `my-tutors/page.jsx` — fix broken `/add-tutors` → `/add-tutor` link (lines 47, 61)
+- [x] `components/MyTutorsList.jsx` — biggest change: raw `<input>`/`<button>` and
       hand-rolled modals → primitives
-- [ ] `booked-sessions/page.jsx` — retoken
+- [x] `booked-sessions/page.jsx` — retoken
+- [x] `components/UserProfileDropdown.jsx` — HeroUI `Dropdown` → custom popover. This item
+      was carried in Phase 4's fold-in list; it is what made the final HeroUI import go
+
+### Also done in this phase
+
+- [x] `Avatar.jsx` — added the `2xs` (28px) and `xl` (160px) rungs. `cn` is plain
+      concatenation, not `tailwind-merge`, so a `className` override cannot reliably
+      beat a `size` prop's width/height
+- [x] `components/ui/GoogleMark.jsx` — new. `lucide-react` dropped brand logos, so the
+      `react-icons/fc` Google glyph had no replacement to migrate to
+- [x] `lib/booking-date.js` — doc comment no longer claims a HeroUI contract. The
+      `{year, month, day}` branch is kept; `BookingModal` now passes the native
+      `<input type="date">` string, which the `new Date(value)` branch already handled
+
+### Defects fixed along the way
+
+- [x] `tutors/[id]/page.jsx` — a missing tutor rendered a page of `undefined`. Now
+      `notFound()`s, using the `_not-found` route Phase 6 already built
+- [x] `booked-sessions/page.jsx` — the session date was labelled `Subject:`, and the
+      avatar fallback was gated on `booking.tutorImage` while rendering `booking.image`
+- [x] `BookingCancelAlert.jsx` — the confirm sentence read as
+      "`<Name>` Are You Sure You Want To Delete"
+
+### Left alone deliberately
+
+- [ ] `BookingModal.jsx:33` — `defaultDateString` still falls back to the hardcoded
+      `"2026-05-25"`, which is now in the past. Phase 10's brief was "logic untouched",
+      so this needs a decision before it silently books a past date
+- [ ] `BookingCancelAlert.jsx` — `window.location.reload()` fires immediately after the
+      DELETE, so the `deletedCount` branch and its toasts are dead code, and a second
+      reload fires 1.5s later. Behaviour preserved exactly; needs a decision
+- [ ] `booked-sessions/page.jsx` — the `Join` button has no handler. Retokened as a
+      `Button`, but it still does nothing
 
 ---
 

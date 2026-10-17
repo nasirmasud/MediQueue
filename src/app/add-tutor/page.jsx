@@ -1,9 +1,134 @@
-"use client"
+"use client";
 
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { DatePicker } from "@/components/ui/DatePicker";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Input } from "@/components/ui/Input";
+import { Section } from "@/components/ui/Section";
+import { Select } from "@/components/ui/Select";
 import { authClient } from "@/lib/auth-client";
-import { Button, Card, FieldError, Input, Label, ListBox, Select, TextField } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+
+const SUBJECTS = [
+  "Anatomy",
+  "Physiology",
+  "Biochemistry",
+  "Pathology",
+  "General Medicine",
+];
+
+const TEACHING_MODES = ["Online", "Offline", "Both"];
+
+const FIELDS = [
+  {
+    name: "tutorName",
+    label: "Tutor Full Name",
+    placeholder: "Enter your full name",
+    md: 2,
+  },
+  {
+    name: "subject",
+    kind: "select",
+    label: "Subject / Category",
+    placeholder: "Select subject",
+    options: SUBJECTS,
+  },
+  {
+    name: "image",
+    label: "Profile Image URL",
+    placeholder: "https://example.com/photo.jpg",
+    type: "url",
+    lg: 2,
+  },
+  {
+    name: "availability",
+    label: "Availability (Days & Time)",
+    placeholder: "Sun - Thu, 5:00 PM",
+  },
+  {
+    name: "hourlyFee",
+    label: "Hourly Fee (BDT)",
+    placeholder: "500",
+    type: "number",
+    min: "0",
+  },
+  {
+    name: "totalSlot",
+    label: "Total Slots",
+    placeholder: "10",
+    type: "number",
+    min: "1",
+  },
+  { name: "startDate", kind: "date", label: "Session Start Date" },
+  {
+    name: "teachingMode",
+    kind: "select",
+    label: "Teaching Mode",
+    placeholder: "Select mode",
+    options: TEACHING_MODES,
+  },
+  { name: "district", label: "District / City", placeholder: "Your district or city" },
+  {
+    name: "address",
+    label: "Specific Area / Address",
+    placeholder: "Give a detailed address",
+    md: 2,
+  },
+  {
+    name: "institution",
+    label: "Institution",
+    placeholder: "Chittagong Medical College",
+    md: 2,
+  },
+  {
+    name: "experienceYears",
+    label: "Experience (Years)",
+    placeholder: "3",
+    type: "number",
+    min: "0",
+  },
+];
+
+const spanClass = ({ md, lg }) =>
+  [md === 2 && "md:col-span-2", lg === 2 && "lg:col-span-2"]
+    .filter(Boolean)
+    .join(" ");
+
+function FieldControl({ field }) {
+  if (field.kind === "select") {
+    return (
+      <Select
+        id={field.name}
+        name={field.name}
+        required
+        placeholder={field.placeholder}
+      >
+        {field.options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </Select>
+    );
+  }
+
+  if (field.kind === "date") {
+    return <DatePicker id={field.name} name={field.name} required />;
+  }
+
+  return (
+    <Input
+      id={field.name}
+      name={field.name}
+      type={field.type ?? "text"}
+      min={field.min}
+      required
+      placeholder={field.placeholder}
+    />
+  );
+}
 
 const AddTutorPage = () => {
   const { data: session } = authClient.useSession();
@@ -21,9 +146,9 @@ const AddTutorPage = () => {
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(tutorData)
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(tutorData),
       });
 
       const data = await res.json();
@@ -35,162 +160,46 @@ const AddTutorPage = () => {
     } catch (err) {
       toast.error(err.message || "Failed to add tutor", { id: toastId });
     }
-  }
+  };
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 w-full max-w-[1440px] mx-auto min-h-screen bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-50 transition-colors duration-200">
-      {/* Header section */}
-      <div className="mb-8 px-2">
-        <h1 className="text-3xl font-extrabold text-primary dark:text-indigo-400">
-          Become a MediQueue Expert Tutor
-        </h1>
-        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
-          Fill out the information below to create a professional tutor profile.
-        </p>
+    <Section tone="surface" spacing="lg">
+      <div className="mx-auto w-full max-w-5xl">
+        <div className="max-w-2xl">
+          <Eyebrow>Mentor Studio</Eyebrow>
+          <h1 className="mt-3 text-headline-lg text-on-surface">
+            Become a MediQueue Expert Tutor
+          </h1>
+          <p className="mt-2 text-body-md text-on-surface-variant">
+            Fill out the information below to publish a tutor profile students can book.
+          </p>
+        </div>
+
+        <Card padding="none" shadow="md" className="mt-8">
+          <form onSubmit={onSubmit} className="p-6 sm:p-8">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {FIELDS.map((field) => (
+                <div key={field.name} className={spanClass(field)}>
+                  <label
+                    htmlFor={field.name}
+                    className="mb-1.5 block text-label-md text-on-surface"
+                  >
+                    {field.label}
+                  </label>
+                  <FieldControl field={field} />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 border-t border-outline-variant/30 pt-6">
+              <Button type="submit" size="lg" shape="pill" block>
+                Add Tutor
+              </Button>
+            </div>
+          </form>
+        </Card>
       </div>
-
-      <Card className="w-full border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm rounded-2xl overflow-hidden mx-auto">
-        <form onSubmit={onSubmit} className="p-6 sm:p-10 space-y-8 w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full">
-
-            <div className="md:col-span-2">
-              <TextField name="tutorName" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Tutor Full Name</Label>
-                <Input placeholder="Enter Your Full Name" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div>
-              <Select
-                name="subject"
-                isRequired
-                className="w-full"
-                placeholder="Select subject"
-              >
-                <Label className="text-gray-700 dark:text-zinc-300">Subject / Category</Label>
-                <Select.Trigger className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100">
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover className="bg-white dark:bg-zinc-900 border dark:border-zinc-800">
-                  <ListBox className="text-gray-900 dark:text-zinc-100">
-                    <ListBox.Item id="Anatomy" textValue="Anatomy">Anatomy<ListBox.ItemIndicator /></ListBox.Item>
-                    <ListBox.Item id="Physiology" textValue="Physiology">Physiology<ListBox.ItemIndicator /></ListBox.Item>
-                    <ListBox.Item id="Biochemistry" textValue="Biochemistry">Biochemistry<ListBox.ItemIndicator /></ListBox.Item>
-                    <ListBox.Item id="Pathology" textValue="Pathology">Pathology<ListBox.ItemIndicator /></ListBox.Item>
-                    <ListBox.Item id="General Medicine" textValue="General Medicine">General Medicine<ListBox.ItemIndicator /></ListBox.Item>
-                  </ListBox>
-                </Select.Popover>
-              </Select>
-            </div>
-
-            <div className="lg:col-span-2">
-              <TextField name="image" type="url" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Profile Image URL</Label>
-                <Input placeholder="Profile Image URL" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div>
-              <TextField name="availability" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Availability (Days & Time)</Label>
-                <Input placeholder="Sun - Thu, 5:00 PM" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div>
-              <TextField name="hourlyFee" type="number" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Hourly Fee (BDT)</Label>
-                <Input placeholder="500" min="0" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div>
-              <TextField name="totalSlot" type="number" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Total Slots</Label>
-                <Input placeholder="10" min="1" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div>
-              <TextField name="startDate" type="date" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Session Start Date</Label>
-                <Input className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div>
-              <Select
-                name="teachingMode"
-                isRequired
-                className="w-full"
-                placeholder="Select mode"
-              >
-                <Label className="text-gray-700 dark:text-zinc-300">Teaching Mode</Label>
-                <Select.Trigger className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100">
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover className="bg-white dark:bg-zinc-900 border dark:border-zinc-800">
-                  <ListBox className="text-gray-900 dark:text-zinc-100">
-                    <ListBox.Item id="Online" textValue="Online">Online<ListBox.ItemIndicator /></ListBox.Item>
-                    <ListBox.Item id="Offline" textValue="Offline">Offline<ListBox.ItemIndicator /></ListBox.Item>
-                    <ListBox.Item id="Both" textValue="Both">Both<ListBox.ItemIndicator /></ListBox.Item>
-                  </ListBox>
-                </Select.Popover>
-              </Select>
-            </div>
-
-            <div>
-              <TextField name="district" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">District / City</Label>
-                <Input placeholder="Your District or City Name" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div className="md:col-span-2">
-              <TextField name="address" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Specific Area / Address</Label>
-                <Input placeholder="Give Details Address" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div className="md:col-span-2">
-              <TextField name="institution" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Institution</Label>
-                <Input placeholder="Chittagong Medical College" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-
-            <div>
-              <TextField name="experienceYears" type="number" isRequired className="w-full">
-                <Label className="text-gray-700 dark:text-zinc-300">Experience (Years)</Label>
-                <Input placeholder="3" min="0" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100" />
-                <FieldError className="text-danger" />
-              </TextField>
-            </div>
-          </div>
-
-          <div className="pt-4 w-full">
-            <Button
-              type="submit"
-              className="rounded-full w-full bg-primary hover:bg-[#4338ca] dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-semibold shadow-md transition h-12 text-md flex items-center justify-center"
-            >
-              Add Tutor
-            </Button>
-          </div>
-        </form>
-      </Card>
-    </div>
+    </Section>
   );
 };
 

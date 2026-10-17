@@ -1,183 +1,311 @@
-'use client'
+import { Avatar } from "@/components/ui/Avatar";
+import {
+  ArrowRight,
+  BadgeCheck,
+  CalendarCheck,
+  ChartLine,
+  CircleCheck,
+  Ear,
+  Search,
+  ShieldCheck,
+  TrendingUp,
+  Video,
+  Volume2,
+} from "lucide-react";
+import Link from "next/link";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { FiArrowRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { GoGoal as GoGoalIcon } from 'react-icons/go';
-import { SiZoom } from 'react-icons/si';
-import 'swiper/css';
-import 'swiper/css/effect-fade';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+const POPULAR_DRILLS = [
+  "Cardiovascular Viva",
+  "Neuro Cranial Nerves",
+  "Thorax Viscera Cards",
+  "Surgery Instruments",
+];
 
-const slideData = [
-  {
-    id: 1,
-    title: "Learn Better.\nAchieve More.",
-    description: "Book expert tutors, attend interactive sessions, and reach your goals with MediQueue.",
-    ctaText: "Browse Tutors",
-    ctaLink: "/tutors",
-    studentImage: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&q=80&w=800",
-  },
-  {
-    id: 2,
-    title: "Expert Tutors.\nGuaranteed Success.",
-    description: "Connect with industry professionals and top-tier educators specialized in your field.",
-    ctaText: "Find Your Tutor",
-    ctaLink: "/tutors",
-    studentImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800",
-  },
-  {
-    id: 3,
-    title: "Clear Doubts.\nInstantly Online.",
-    description: "Get 1-on-1 personalized guidance from top mentors to solve your toughest assignments.",
-    ctaText: "Start Learning",
-    ctaLink: "/all-courses",
-    studentImage: "https://images.unsplash.com/photo-1610484826625-ac2be7f1c8c1?auto=format&fit=crop&q=80&w=800",
-  },
-  {
-    id: 4,
-    title: "Track Growth.\nExcel Academically.",
-    description: "Monitor your progress with weekly mock tests and detailed insights from your tutors.",
-    ctaText: "View Dashboard",
-    ctaLink: "/profile",
-    studentImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800",
-  }
-]
+const AUSCULTATION_BARS = [
+  "h-3 bg-tertiary/50",
+  "h-6 bg-tertiary",
+  "h-4 bg-tertiary/70",
+  "h-7 bg-tertiary",
+  "h-3 bg-tertiary/60",
+  "h-5 bg-tertiary",
+  "h-8 bg-tertiary",
+  "h-4 bg-tertiary/60",
+  "h-6 bg-tertiary",
+  "h-3 bg-tertiary/50",
+  "h-5 bg-tertiary",
+  "h-7 bg-tertiary",
+  "h-4 bg-tertiary/70",
+  "h-2 bg-tertiary/40",
+];
 
-const Slider = () => {
+const TRAJECTORY_ROWS = [
+  "14 Viscera & Embryo Model Viva Cards Cleared",
+  "3 ECG & Chest X-Ray Simulator Stations",
+  "Zero-Anxiety External Examiner Prep",
+];
+
+export default function Slider() {
   return (
-    <section className="relative w-full overflow-hidden bg-[#0a052e]">
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay, EffectFade]}
-        effect={'fade'}
-        fadeEffect={{ crossFade: true }}
-        speed={800}
-        loop={true}
-        autoplay={{ delay: 5000, disableOnInteraction: true }}
-        pagination={{
-          clickable: true,
-          el: '.custom-swiper-pagination',
-        }}
-        navigation={{
-          nextEl: '.swiper-button-next-custom',
-          prevEl: '.swiper-button-prev-custom',
-        }}
-        className="w-full min-h-[500px] lg:h-[480px] xl:h-[550px]"
-      >
-        {slideData.map((slide) => (
-          <SwiperSlide key={slide.id} className="relative w-full h-full flex items-center">
+    <section className="relative w-full overflow-hidden bg-[#080614] pt-12 pb-20 lg:pt-16 lg:pb-28 border-b border-outline-variant/30">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[480px] rounded-full bg-primary-container/20 blur-[140px]" />
+        <div className="absolute top-1/3 -left-20 w-[420px] h-[420px] rounded-full bg-secondary-container/20 blur-[130px]" />
+        <div className="absolute top-1/2 -right-20 w-[440px] h-[440px] rounded-full bg-tertiary-container/20 blur-[140px]" />
+        <div className="absolute inset-0 opacity-[0.035] bg-[radial-gradient(#c3c0ff_1px,transparent_1px)] [background-size:24px_24px]" />
+      </div>
 
-            {/* Background Gradient Layer */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#070420] via-[#0f0a3e] to-[#160e54] opacity-95" />
-
-            <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 w-full h-full grid grid-cols-1 lg:grid-cols-12 items-center gap-8 py-12 lg:py-0">
-
-              {/* Text Content Area */}
-              <div className="lg:col-span-5 text-white flex flex-col justify-center text-center lg:text-left">
-                <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-tight whitespace-pre-line">
-                  {slide.title}
-                </h1>
-                <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                  {slide.description}
-                </p>
-                <div className="mt-8 flex justify-center lg:justify-start">
-                  <Link
-                    href={slide.ctaLink}
-                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all duration-300 hover:translate-x-1"
-                  >
-                    {slide.ctaText}
-                    <FiArrowRight className="w-5 h-5" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Images & Badges Area */}
-              <div className="lg:col-span-7 relative w-full h-[320px] sm:h-[400px] lg:h-[450px] flex items-center justify-center">
-
-                {/* Smooth Gradient Blend Circular Container */}
-                <div
-                  className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[650px] lg:h-[650px] rounded-full overflow-hidden"
-                  style={{
-                    maskImage: 'radial-gradient(circle, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 70%)',
-                    WebkitMaskImage: 'radial-gradient(circle, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 70%)'
-                  }}
-                >
-                  <Image
-                    src={slide.studentImage}
-                    alt="Student Learning"
-                    fill
-                    loading="eager"
-                    fetchPriority="high"
-                    priority
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 480px"
-                  />
-                </div>
-
-                {/* Badge 1: Live Interactive */}
-                <div className="absolute left-2 sm:left-10 top-12 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-white/20 flex items-center gap-3 animate-bounce [animation-duration:3s]">
-                  <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md">
-                    <SiZoom />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-900 leading-tight">Live Interactive</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5 flex items-center gap-1">
-                      Sessions <span className="w-2 h-2 bg-emerald-500 rounded-full inline-block animate-pulse" />
-                    </p>
-                  </div>
-                </div>
-
-                {/* Badge 2: Goals */}
-                <div className="absolute right-2 sm:right-10 bottom-16 bg-white/95 backdrop-blur-md px-5 py-4 rounded-2xl shadow-xl border border-white/20 flex items-center gap-3 animate-bounce [animation-duration:4s]">
-                  <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md">
-                    <GoGoalIcon />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500 leading-none">Achieve</p>
-                    <p className="text-sm font-bold text-gray-900 mt-1">Your Goals</p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </SwiperSlide>
-        ))}
-
-        {/* Custom Navigation Buttons */}
-        <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-full flex items-center justify-center transition-all duration-300 border border-white/10 active:scale-95">
-          <FiChevronLeft className="w-6 h-6" />
-        </button>
-        <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-full flex items-center justify-center transition-all duration-300 border border-white/10 active:scale-95">
-          <FiChevronRight className="w-6 h-6" />
-        </button>
-
-        {/* Custom Pagination */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
-          <div className="custom-swiper-pagination flex items-center gap-2" />
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 flex flex-col items-center">
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-container-high/80 border border-primary/40 backdrop-blur-xl shadow-lg shadow-primary/10 mb-8">
+          <span className="flex h-2.5 w-2.5 relative">
+            <span className="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-tertiary shadow-[0_0_8px_#68dba9]" />
+          </span>
+          <span className="text-[11px] sm:text-[12px] font-display font-bold tracking-wider text-primary uppercase">
+            Elevated Clinical Mentorship &bull; 1,200+ Honors Candidates
+          </span>
         </div>
-      </Swiper>
 
-      {/* Global CSS for Swiper Active Dots */}
-      <style jsx global>{`
-        .custom-swiper-pagination .swiper-pagination-bullet {
-          background: #ffffff !important;
-          opacity: 0.4;
-          width: 9px;
-          height: 9px;
-          transition: all 0.3s ease;
-          border-radius: 9999px;
-        }
-        .custom-swiper-pagination .swiper-pagination-bullet-active {
-          background: #6366f1 !important;
-          opacity: 1;
-          width: 24px;
-        }
-      `}</style>
+        <div className="text-center max-w-4xl mx-auto">
+          <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">
+            Ace your MBBS Viva with{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-surface-tint to-tertiary drop-shadow-sm">
+              doctors who passed with Honors.
+            </span>
+          </h1>
+          <p className="text-body-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8">
+            Direct 1-on-1 bedside simulations, high-yield viscera viva cards, and surgical OSCE
+            drills taught by BMDC verified registrars and demonstrators from DMC, CMC &amp; SSMC.
+          </p>
+        </div>
+
+        <div className="w-full max-w-2xl mx-auto mb-14">
+          <div className="relative flex items-center p-2 rounded-2xl bg-surface-container-low/95 border border-primary/30 backdrop-blur-xl shadow-2xl transition-all hover:border-primary/60">
+            <div className="flex items-center pl-3.5 pr-2 text-outline">
+              <Search className="w-[22px] h-[22px] text-primary" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search by subject e.g. Pathology, or mentor from DMC, CMC..."
+              className="w-full bg-transparent text-body-md text-white placeholder:text-outline focus:outline-none py-2 px-1"
+            />
+            <Link
+              href="#tutors-directory"
+              className="hidden sm:inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-container to-[#6049e8] text-white text-label-md font-bold shadow-lg hover:from-primary-container/90 hover:to-[#6d57ef] transition-all shrink-0"
+            >
+              <span>Match Tutor</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-3.5 text-xs text-on-surface-variant">
+            <span className="font-medium text-outline flex items-center gap-1">
+              <TrendingUp className="w-3.5 h-3.5 text-tertiary" /> Popular Drills:
+            </span>
+            {POPULAR_DRILLS.map((drill) => (
+              <Link
+                key={drill}
+                href="#tutors-directory"
+                className="px-2.5 py-1 rounded-full bg-surface-container-high/70 hover:bg-surface-container-highest border border-white/10 text-white transition-colors"
+              >
+                {drill}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+          <div className="md:col-span-4 rounded-2xl bg-surface-container-low/90 border border-white/10 p-5 shadow-xl flex flex-col justify-between hover:border-tertiary/40 transition-all duration-300 group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse" />
+                  <span className="font-display text-xs font-bold text-white uppercase tracking-wider">
+                    Today&apos;s Clinical Case
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-tertiary/10 text-tertiary border border-tertiary/30">
+                  Daily OSPE
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-surface-container-lowest/80 border border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <Ear className="w-4 h-4 text-tertiary" /> Mitral Regurgitation
+                  </span>
+                  <span className="text-[10px] font-mono text-outline">Grade 3/6 Pan-systolic</span>
+                </div>
+                <div className="flex items-center gap-1 h-8 my-2 px-2 bg-surface-container-high rounded-lg">
+                  {AUSCULTATION_BARS.map((bar, index) => (
+                    <span
+                      key={index}
+                      className={`w-1 rounded animate-pulse ${bar}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-[11px] text-on-surface-variant font-mono mt-1">
+                  Radiation to left axilla with high-pitched blowing systolic murmur.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-white/10">
+                <Avatar size="xs" name="Dr. Nusrat Jahan" className="bg-surface-container-highest" />
+                <div>
+                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                    Dr. Nusrat Jahan <span className="text-[10px] text-tertiary font-mono">CMC</span>
+                  </div>
+                  <p className="text-[11px] text-on-surface-variant italic mt-0.5">
+                    &quot;In viva, examiner always asks for differentiation between MR and TR. Note
+                    the respiratory variation.&quot;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 mt-2">
+              <button
+                type="button"
+                className="w-full py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-white text-xs font-bold flex items-center justify-center gap-2 border border-white/10 transition-colors"
+              >
+                <Volume2 className="w-4 h-4 text-tertiary" />
+                <span>Listen Auscultation Audio</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="md:col-span-4 rounded-2xl bg-gradient-to-b from-surface-container-high/90 to-surface-container-low/95 border-2 border-primary/50 p-6 shadow-2xl flex flex-col justify-between relative group hover:border-primary transition-all duration-300 transform md:-translate-y-2">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-primary-container to-[#6049e8] text-white text-[11px] font-bold font-display tracking-wider shadow-md flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-tertiary motion-safe:animate-ping" />
+              FEATURED MENTOR OF THE DAY
+            </div>
+
+            <div className="pt-2">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3.5">
+                  <Avatar size="lg" name="Dr. Ariful Islam" ring="primary" status="tertiary" statusLabel="Available now" />
+                  <div>
+                    <h3 className="text-headline-sm text-white flex items-center gap-1.5">
+                      <span>Dr. Ariful Islam</span>
+                      <BadgeCheck className="w-[18px] h-[18px] text-tertiary" />
+                    </h3>
+                    <div className="text-xs text-primary font-medium mt-0.5">
+                      Dhaka Medical College (DMC)
+                    </div>
+                    <div className="text-[11px] text-tertiary-fixed-dim font-mono">
+                      BMDC #A-84921 &bull; Cardiology Resident
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2.5 rounded-xl bg-surface-container-lowest/70 border border-white/10">
+                  <span className="text-[10px] uppercase text-outline block">Viva Score</span>
+                  <span className="font-bold text-white text-sm font-display">Honors 88%</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-surface-container-lowest/70 border border-white/10">
+                  <span className="text-[10px] uppercase text-outline block">Availability</span>
+                  <span className="font-bold text-tertiary text-xs flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-tertiary" /> In 15 mins
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-3 p-3 rounded-xl bg-surface-container/60 border border-white/10">
+                <div className="text-[11px] text-on-surface-variant flex items-center justify-between">
+                  <span>Specialty:</span>
+                  <span className="text-white font-medium">Physiology &amp; Cardiovascular OSPE</span>
+                </div>
+                <div className="text-[11px] text-on-surface-variant flex items-center justify-between mt-1">
+                  <span>Mentored:</span>
+                  <span className="text-white font-medium">380+ MBBS Candidates</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-5 space-y-2">
+              <Link
+                href="#tutors-directory"
+                className="w-full py-3 rounded-xl bg-primary-container hover:bg-primary-container/90 text-white text-label-md font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary-container/30 transition-all"
+              >
+                <CalendarCheck className="w-[18px] h-[18px]" />
+                <span>Instant Book Session (৳1,200/hr)</span>
+              </Link>
+              <div className="flex items-center justify-center gap-4 text-[11px] text-outline pt-1">
+                <span className="flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-tertiary" /> Escrow Protected
+                </span>
+                <span className="flex items-center gap-1">
+                  <Video className="w-3.5 h-3.5 text-primary" /> 1-on-1 HD Viva Room
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="md:col-span-4 rounded-2xl bg-surface-container-low/90 border border-white/10 p-5 shadow-xl flex flex-col justify-between hover:border-primary/40 transition-all duration-300 group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+                <div className="flex items-center gap-2">
+                  <ChartLine className="w-[18px] h-[18px] text-primary" />
+                  <span className="font-display text-xs font-bold text-white uppercase tracking-wider">
+                    Student Trajectory
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/30">
+                  Verified Result
+                </span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-surface-container-lowest/80 border border-white/10">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <span className="text-xs font-bold text-white block">Sayeed Kabir</span>
+                    <span className="text-[10px] text-on-surface-variant">
+                      Shaheed Suhrawardy Med (SSMC)
+                    </span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-tertiary/15 text-tertiary font-mono text-[10px] font-bold">
+                    +42% Viva Score
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-on-surface-variant">Anatomy 1st Prof Board</span>
+                    <span className="text-tertiary font-bold">Passed with Honors</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+                    <div className="h-full rounded-full bg-gradient-to-r from-primary to-tertiary w-[92%]" />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-outline font-mono">
+                    <span>Baseline: 52%</span>
+                    <span>Honors Threshold: 75%</span>
+                    <span className="text-white font-bold">Achieved: 88%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-1">
+                {TRAJECTORY_ROWS.map((row) => (
+                  <div key={row} className="flex items-center gap-2 text-xs text-white">
+                    <CircleCheck className="w-4 h-4 text-tertiary" />
+                    <span>{row}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 mt-2">
+              <Link
+                href="#how-it-works"
+                className="w-full py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-bold flex items-center justify-center gap-2 border border-white/10 transition-colors"
+              >
+                <span>Read Candidate Case Studies</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
-  )
+  );
 }
-
-export default Slider

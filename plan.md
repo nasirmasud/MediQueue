@@ -225,19 +225,19 @@ the entire token surface. Where `DESIGN-tobe.md` and `code.html` disagree, **`co
 
 Token-driven, no hardcoded hex, no HeroUI. Match `code.html`'s rendered output exactly.
 
-- [ ] `Button.jsx` — primary-container / surface-container / surface-container-highest /
+- [x] `Button.jsx` — primary-container / surface-container / surface-container-highest /
       outline / ghost / danger; `px-5 py-2.5 rounded-xl` + `label-md` and the `px-7 py-3.5`
       / `px-8 py-4` + `label-lg` CTA sizes
-- [ ] `Input.jsx` — `bg-surface-container` + `rounded-xl` + leading-icon slot,
+- [x] `Input.jsx` — `bg-surface-container` + `rounded-xl` + leading-icon slot,
       focus → `bg-surface-container-high`
-- [ ] `Select.jsx`
-- [ ] `Card.jsx` — `rounded-2xl` with the shadow variants used across the prototype
-- [ ] `Badge.jsx` / `Chip.jsx` — BMDC-verified, availability beacon, medical-college pill
-- [ ] `Modal.jsx`
-- [ ] `Avatar.jsx` — status-ring variant (`ring-2 ring-surface-container-low`)
-- [ ] `Spinner.jsx` — replaces HeroUI's for `loading.js`
-- [ ] `Sheet.jsx` — frosted bottom sheet (mobile) / modal (desktop)
-- [ ] `DatePicker.jsx` — native `<input type="date">`; retires the **undeclared
+- [x] `Select.jsx`
+- [x] `Card.jsx` — `rounded-2xl` with the shadow variants used across the prototype
+- [x] `Badge.jsx` / `Chip.jsx` — BMDC-verified, availability beacon, medical-college pill
+- [x] `Modal.jsx`
+- [x] `Avatar.jsx` — status-ring variant (`ring-2 ring-surface-container-low`)
+- [x] `Spinner.jsx` — replaces HeroUI's for `loading.js`
+- [x] `Sheet.jsx` — frosted bottom sheet (mobile) / modal (desktop)
+- [x] `DatePicker.jsx` — native `<input type="date">`; retires the **undeclared
       `@internationalized/date`** import in `BookingModal.jsx:7`
 
 ---
@@ -246,14 +246,14 @@ Token-driven, no hardcoded hex, no HeroUI. Match `code.html`'s rendered output e
 
 Three files only. The other 10 import sites keep HeroUI until Phase 10.
 
-- [ ] `components/TutorCard.jsx` — `Button`/`Card` → primitives. Rebuild to exact
+- [x] `components/TutorCard.jsx` — `Button`/`Card` → primitives. Rebuild to exact
       `code.html` §5 anatomy: 56px avatar + `ring-2 ring-surface-container-low` status
       ring · `verified` icon beside name · teaching-mode line · `apartment` institution
       row in `primary` · 2×2 meta grid with `event_seat` turning `error` at 0 slots ·
       location row · `Hourly Fee` + ৳ with `.tabular` · `bg-primary-container` Book button.
       Fixes missing `border-t` (FIXES #4); adds the `aria-label` the prototype omitted (FIXES #14)
-- [ ] `loading.js` — `Spinner` → primitive, retokened
-- [ ] `components/Navbar.jsx` — `Avatar` → primitive
+- [x] `loading.js` — `Spinner` → primitive, retokened
+- [x] `components/Navbar.jsx` — `Avatar` → primitive
 
 **Exit criterion:** home page renders with zero HeroUI imports. HeroUI stays installed.
 

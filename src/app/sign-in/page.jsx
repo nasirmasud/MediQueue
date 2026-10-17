@@ -1,11 +1,17 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { GoogleMark } from "@/components/ui/GoogleMark";
+import { Input } from "@/components/ui/Input";
+import { Section } from "@/components/ui/Section";
 import { authClient } from "@/lib/auth-client";
-import { Check } from "@gravity-ui/icons";
-import { Button, Card, FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import { LogIn, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
+
+const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 const SignInPage = () => {
   const router = useRouter();
@@ -35,106 +41,98 @@ const SignInPage = () => {
         provider: "google",
         callbackURL: "/",
       });
-    } catch (err) {
+    } catch {
       alert("Google sign in failed. Please try again.");
     }
   };
 
   return (
-    <div className="w-full bg-gray-50 dark:bg-zinc-950 flex flex-col items-center justify-center py-12 sm:py-16 p-4 transition-colors duration-200">
-
-      <Card className="w-full max-w-lg p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl rounded-3xl mx-auto">
-
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white">
-            Welcome Back
-          </h2>
-          <p className="text-sm text-gray-400 mt-2">
-            Sign in to your MediQueue account to continue
+    <Section tone="surface" spacing="lg">
+      <Card padding="none" shadow="xl" className="mx-auto w-full max-w-md p-6 sm:p-8">
+        <div className="mb-7 text-center">
+          <Eyebrow>Welcome Back</Eyebrow>
+          <h1 className="mt-3 text-headline-lg text-on-surface">Sign in to MediQueue</h1>
+          <p className="mt-2 text-body-md text-on-surface-variant">
+            Pick up where you left off with your mentors and sessions.
           </p>
         </div>
 
-        <Form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
+          <div>
+            <label htmlFor="email" className="mb-1.5 block text-label-md text-on-surface">
+              Email address
+            </label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              required
+              pattern={EMAIL_PATTERN.source}
+              title="Please enter a valid email address"
+              placeholder="Enter your email"
+            />
+          </div>
 
-          {/* Email Address Field */}
-          <TextField
-            isRequired
-            name="email"
-            type="email"
-            className="w-full"
-            validate={(value) => {
-              if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-                return "Please enter a valid email address";
-              }
-              return null;
-            }}
-          >
-            <Label className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Email Address</Label>
-            <Input placeholder="Enter your email" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 mt-1" />
-            <FieldError className="text-xs text-red-500 mt-1" />
-          </TextField>
-
-          {/* Password Field */}
-          <TextField
-            isRequired
-            name="password"
-            type="password"
-            className="w-full"
-          >
-            <div className="flex justify-between items-center">
-              <Label className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Password</Label>
-              <Link href="/forgot-password" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+          <div>
+            <div className="mb-1.5 flex items-center justify-between gap-3">
+              <label htmlFor="password" className="text-label-md text-on-surface">
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                className="text-label-md text-primary transition-colors hover:text-surface-tint"
+              >
                 Forgot password?
               </Link>
             </div>
-            <Input placeholder="••••••••" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 mt-1" />
-            <FieldError className="text-xs text-red-500 mt-1" />
-          </TextField>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              placeholder="••••••••"
+            />
+          </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full">
-            <Button
-              type="submit"
-              className="rounded-full flex-1 bg-primary hover:bg-[#4338ca] dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-bold h-12 text-sm flex items-center justify-center gap-2 shadow-md transition-all"
-            >
-              <Check className="w-4 h-4" />
+          <div className="flex flex-col gap-3 pt-1 sm:flex-row">
+            <Button type="submit" className="flex-1">
+              <LogIn aria-hidden="true" className="size-4" />
               Sign In
             </Button>
-
-            <Button
-              type="reset"
-              className="rounded-full flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-700 dark:text-zinc-200 font-semibold h-12 text-sm flex items-center justify-center transition-all"
-            >
+            <Button type="reset" variant="secondary" className="flex-1">
+              <RotateCcw aria-hidden="true" className="size-4" />
               Reset
             </Button>
           </div>
 
-          <div className="relative flex py-2 items-center">
-            <div className="grow border-t border-gray-200 dark:border-zinc-200"></div>
-            <span className="shrink mx-4 text-gray-400 text-xs">Or continue with</span>
-            <div className="grow border-t border-gray-200 dark:border-zinc-200"></div>
+          <div className="flex items-center gap-4 py-1">
+            <span className="h-px flex-1 bg-outline-variant" />
+            <span className="text-label-sm uppercase text-outline">Or continue with</span>
+            <span className="h-px flex-1 bg-outline-variant" />
           </div>
 
           <Button
             type="button"
+            variant="outline"
             onClick={handleGoogleSignIn}
-            className="w-full h-12 rounded-full border-2 border-indigo-600 dark:border-indigo-500 bg-transparent text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:text-white dark:hover:text-white font-bold text-sm flex items-center justify-center gap-3 transition-all group"
+            block
           >
-            <FcGoogle className="w-4 h-4 transition-colors" />
+            <GoogleMark />
             Sign in with Google
           </Button>
 
-          {/* Redirect to Sign Up */}
-          <p className="text-xs text-center text-gray-400 mt-2">
-            Don`&apos;an account yet?{" "}
-            <Link href="/sign-up" className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
+          <p className="mt-1 text-center text-body-md text-on-surface-variant">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/sign-up"
+              className="font-semibold text-primary transition-colors hover:text-surface-tint"
+            >
               Create an account
             </Link>
           </p>
-
-        </Form>
+        </form>
       </Card>
-    </div>
+    </Section>
   );
 };
 

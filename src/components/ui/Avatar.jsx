@@ -6,13 +6,15 @@ const WRAP = "relative inline-flex shrink-0";
 const CIRCLE = "overflow-hidden rounded-full bg-surface-container-highest";
 
 const SIZES = {
+  "2xs": "w-7 h-7",
   xs: "w-9 h-9",
   sm: "w-10 h-10",
   md: "w-14 h-14",
   lg: "w-16 h-16",
+  xl: "w-40 h-40",
 };
 
-const PIXELS = { xs: 36, sm: 40, md: 56, lg: 64 };
+const PIXELS = { "2xs": 28, xs: 36, sm: 40, md: 56, lg: 64, xl: 160 };
 
 const RINGS = {
   none: "",

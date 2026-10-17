@@ -1,66 +1,63 @@
-"use client";
+import { CalendarCheck, Compass, MonitorPlay } from "lucide-react";
+import { Card } from "@/components/ui/Card";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Section } from "@/components/ui/Section";
+import { HOW_IT_WORKS } from "@/lib/demo";
 
-import { Calendar, Search, Video } from "lucide-react";
+const ICONS = {
+  travel_explore: Compass,
+  event_available: CalendarCheck,
+  cast_for_education: MonitorPlay,
+};
 
-export default function HowItWorks() {
+const TILE_TONES = {
+  primary: "bg-primary/10 text-primary",
+  tertiary: "bg-tertiary/10 text-tertiary",
+  secondary: "bg-secondary/10 text-secondary",
+};
+
+const HowItWorks = () => {
   return (
-    <section className="py-20 bg-white dark:bg-zinc-900 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl tracking-tight">
-            How MediQueue Works
-          </h2>
-          <p className="mt-4 text-lg text-gray-500 dark:text-zinc-400 font-normal">
-            Your journey to academic medical excellence is just three simple steps away.
-          </p>
-        </div>
-
-        {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-
-          {/* Step 1 */}
-          <div className="flex flex-col items-center p-6 bg-gray-50 dark:bg-zinc-950 rounded-3xl border border-gray-100 dark:border-zinc-900 text-center transition-all hover:shadow-xl hover:-translate-y-1 duration-300">
-            <div className="flex items-center justify-center w-16 h-16 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-2xl mb-6 shadow-sm">
-              <Search className="w-8 h-8" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              1. Find Your Specialist
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-zinc-400 font-normal leading-relaxed">
-              Browse through our pool of verified medical mentors. Filter easily by specific subjects or medical colleges.
-            </p>
-          </div>
-
-          {/* Step 2 */}
-          <div className="flex flex-col items-center p-6 bg-gray-50 dark:bg-zinc-950 rounded-3xl border border-gray-100 dark:border-zinc-900 text-center transition-all hover:shadow-xl hover:-translate-y-1 duration-300">
-            <div className="flex items-center justify-center w-16 h-16 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-2xl mb-6 shadow-sm">
-              <Calendar className="w-8 h-8" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              2. Select Date & Book
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-zinc-400 font-normal leading-relaxed">
-              Check the tutor&apos;s real-time availability start date, fill in your information, and securely request a custom session.
-            </p>
-          </div>
-
-          {/* Step 3 */}
-          <div className="flex flex-col items-center p-6 bg-gray-50 dark:bg-zinc-950 rounded-3xl border border-gray-100 dark:border-zinc-900 text-center transition-all hover:shadow-xl hover:-translate-y-1 duration-300">
-            <div className="flex items-center justify-center w-16 h-16 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-2xl mb-6 shadow-sm">
-              <Video className="w-8 h-8" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              3. Start Live Learning
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-zinc-400 font-normal leading-relaxed">
-              Access your personalized dashboard to track routes, connect instantly on schedule, and unlock medical mastery.
-            </p>
-          </div>
-
-        </div>
+    <Section id='how-it-works' tone='lowest' spacing='lg'>
+      <div className='text-center max-w-2xl mx-auto mb-16'>
+        <Eyebrow>Simple &amp; Frictionless</Eyebrow>
+        <h2 className='text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight mt-1'>
+          How MediQueue Works
+        </h2>
+        <p className='text-body-md text-on-surface-variant mt-3'>
+          Your path to MBBS honors and clinical viva confidence in three seamless steps.
+        </p>
       </div>
-    </section>
+
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-8 relative'>
+        {HOW_IT_WORKS.map((item) => {
+          const Icon = ICONS[item.icon];
+          return (
+            <Card
+              key={item.step}
+              tone='surface'
+              shadow='lg'
+              padding='lg'
+              className='relative flex flex-col items-center text-center group hover:bg-surface-container transition-all'
+            >
+              <div className='absolute -top-5 w-10 h-10 rounded-full bg-primary-container text-white text-headline-sm flex items-center justify-center shadow-md'>
+                {item.step}
+              </div>
+              <div
+                className={`w-16 h-16 rounded-2xl flex items-center justify-center my-4 group-hover:scale-110 transition-transform ${
+                  TILE_TONES[item.iconTone] ?? TILE_TONES.primary
+                }`}
+              >
+                {Icon ? <Icon aria-hidden='true' className='size-9' /> : null}
+              </div>
+              <h3 className='text-headline-md text-on-surface mb-2'>{item.title}</h3>
+              <p className='text-body-sm text-on-surface-variant leading-relaxed'>{item.copy}</p>
+            </Card>
+          );
+        })}
+      </div>
+    </Section>
   );
-}
+};
+
+export default HowItWorks;

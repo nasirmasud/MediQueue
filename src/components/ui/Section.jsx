@@ -8,6 +8,7 @@ const TONES = {
 };
 
 const SPACING = {
+  none: "",
   sm: "py-12",
   md: "py-16",
   lg: "py-20",

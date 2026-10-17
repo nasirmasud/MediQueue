@@ -1,11 +1,19 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { GoogleMark } from "@/components/ui/GoogleMark";
+import { Input } from "@/components/ui/Input";
+import { Section } from "@/components/ui/Section";
+import { Select } from "@/components/ui/Select";
 import { authClient } from "@/lib/auth-client";
-import { Check } from "@gravity-ui/icons";
-import { Button, Card, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import { LogIn, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
+
+const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+const PASSWORD_PATTERN = /^(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
 const SignUpPage = () => {
   const router = useRouter();
@@ -20,11 +28,11 @@ const SignUpPage = () => {
       password: user.password,
       image: user.image,
       name: user.name,
-      role: user.role
+      role: user.role,
     });
 
     if (data) {
-      router.push('/');
+      router.push("/");
     }
 
     if (error) {
@@ -38,143 +46,126 @@ const SignUpPage = () => {
         provider: "google",
         callbackURL: "/",
       });
-    } catch (err) {
+    } catch {
       alert("Google sign in failed. Please try again.");
     }
   };
 
   return (
-    <div className="w-full bg-gray-50 dark:bg-zinc-950 flex items-center justify-center py-8 sm:py-12 p-4 transition-colors duration-200">
-
-      <Card className="w-full max-w-lg p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl rounded-3xl mx-auto">
-
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white">
-            Create Account
-          </h2>
-          <p className="text-sm text-gray-400 mt-2">
-            Join MediQueue to explore and book expert medical tutors
+    <Section tone="surface" spacing="lg">
+      <Card padding="none" shadow="xl" className="mx-auto w-full max-w-md p-6 sm:p-8">
+        <div className="mb-7 text-center">
+          <Eyebrow>Join MediQueue</Eyebrow>
+          <h1 className="mt-3 text-headline-lg text-on-surface">Create your account</h1>
+          <p className="mt-2 text-body-md text-on-surface-variant">
+            Book verified medical tutors and track your sessions in one place.
           </p>
         </div>
 
-        <Form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
-
-          {/* Full Name Field */}
-          <TextField isRequired name="name" type="text" className="w-full">
-            <Label className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Full Name</Label>
-            <Input placeholder="Your Full Name" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 mt-1" />
-            <FieldError className="text-xs text-red-500 mt-1" />
-          </TextField>
-
-          <TextField name="image" type="url" className="w-full">
-            <Label className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Profile Image URL</Label>
-            <Input placeholder="https://example.com/your-photo.jpg" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 mt-1" />
-            <FieldError className="text-xs text-red-500 mt-1" />
-          </TextField>
-
-          {/* Email Address Field */}
-          <TextField
-            isRequired
-            name="email"
-            type="email"
-            className="w-full"
-            validate={(value) => {
-              if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-                return "Please enter a valid email address";
-              }
-              return null;
-            }}
-          >
-            <Label className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Email Address</Label>
-            <Input placeholder="Enter an Email" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 mt-1" />
-            <FieldError className="text-xs text-red-500 mt-1" />
-          </TextField>
-
-          {/* Role Selection */}
-          <div className="w-full flex flex-col gap-1.5">
-            <Label className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Register As</Label>
-            <select
-              name="role"
-              required
-              className="w-full h-10 px-3 rounded-2xl bg-gray-50 dark:bg-zinc-800 text-sm border-0 outline-none text-gray-900 dark:text-zinc-100 transition mt-1"
-            >
-              <option value="student">I am a Student</option>
-              <option value="tutor">I am a Tutor</option>
-            </select>
+        <form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
+          <div>
+            <label htmlFor="name" className="mb-1.5 block text-label-md text-on-surface">
+              Full name
+            </label>
+            <Input id="name" name="name" type="text" required placeholder="Your full name" />
           </div>
 
-          {/* Password Field */}
-          <TextField
-            isRequired
-            minLength={8}
-            name="password"
-            type="password"
-            className="w-full"
-            validate={(value) => {
-              if (value.length < 8) {
-                return "Password must be at least 8 characters";
-              }
-              if (!/[A-Z]/.test(value)) {
-                return "Password must contain at least one uppercase letter";
-              }
-              if (!/[0-9]/.test(value)) {
-                return "Password must contain at least one number";
-              }
-              return null;
-            }}
-          >
-            <Label className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Password</Label>
-            <Input placeholder="••••••••" className="rounded-2xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 mt-1" />
-            <Description className="text-[11px] text-gray-400 mt-1 leading-relaxed">
-              Must be at least 8 characters with 1 uppercase and 1 number
-            </Description>
-            <FieldError className="text-xs text-red-500 mt-1" />
-          </TextField>
+          <div>
+            <label htmlFor="image" className="mb-1.5 block text-label-md text-on-surface">
+              Profile image URL
+            </label>
+            <Input
+              id="image"
+              name="image"
+              type="url"
+              placeholder="https://example.com/your-photo.jpg"
+            />
+          </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full">
-            <Button
-              type="submit"
-              className="rounded-full flex-1 bg-[#4f46e5] hover:bg-[#4338ca] dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-bold h-12 text-sm flex items-center justify-center gap-2 shadow-md transition-all"
-            >
-              <Check className="w-4 h-4" />
+          <div>
+            <label htmlFor="email" className="mb-1.5 block text-label-md text-on-surface">
+              Email address
+            </label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              required
+              pattern={EMAIL_PATTERN.source}
+              title="Please enter a valid email address"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="role" className="mb-1.5 block text-label-md text-on-surface">
+              Register as
+            </label>
+            <Select id="role" name="role" required>
+              <option value="student">I am a student</option>
+              <option value="tutor">I am a tutor</option>
+            </Select>
+          </div>
+
+          <div>
+            <label htmlFor="password" className="mb-1.5 block text-label-md text-on-surface">
+              Password
+            </label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              minLength={8}
+              pattern={PASSWORD_PATTERN.source}
+              title="Use at least 8 characters with 1 uppercase letter and 1 number"
+              placeholder="••••••••"
+            />
+            <p className="mt-1.5 text-body-sm text-on-surface-variant">
+              At least 8 characters, with 1 uppercase letter and 1 number.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 pt-1 sm:flex-row">
+            <Button type="submit" className="flex-1">
+              <LogIn aria-hidden="true" className="size-4" />
               Sign Up
             </Button>
-
-            <Button
-              type="reset"
-              className="rounded-full flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-700 dark:text-zinc-200 font-semibold h-12 text-sm flex items-center justify-center transition-all"
-            >
+            <Button type="reset" variant="secondary" className="flex-1">
+              <RotateCcw aria-hidden="true" className="size-4" />
               Reset
             </Button>
           </div>
 
-          <div className="relative flex py-2 items-center">
-            <div className="flex-grow border-t border-gray-200 dark:border-zinc-200"></div>
-            <span className="flex-shrink mx-4 text-gray-400 text-xs">Or continue with</span>
-            <div className="flex-grow border-t border-gray-200 dark:border-zinc-200"></div>
+          <div className="flex items-center gap-4 py-1">
+            <span className="h-px flex-1 bg-outline-variant" />
+            <span className="text-label-sm uppercase text-outline">Or continue with</span>
+            <span className="h-px flex-1 bg-outline-variant" />
           </div>
 
           <Button
             type="button"
+            variant="outline"
             onClick={handleGoogleSignIn}
-            className="w-full h-12 rounded-full border-2 border-indigo-600 dark:border-indigo-500 bg-transparent text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:text-white dark:hover:text-white font-bold text-sm flex items-center justify-center gap-3 transition-all"
+            block
           >
-            <FcGoogle className="w-4 h-4 transition-colors" />
+            <GoogleMark />
             Sign up with Google
           </Button>
 
-          <p className="text-xs text-center text-gray-400 mt-2">
+          <p className="mt-1 text-center text-body-md text-on-surface-variant">
             Already have an account?{" "}
-            <Link href="/sign-in" className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
-              Sign In
+            <Link
+              href="/sign-in"
+              className="font-semibold text-primary transition-colors hover:text-surface-tint"
+            >
+              Sign in
             </Link>
           </p>
-
-        </Form>
+        </form>
       </Card>
-    </div>
+    </Section>
   );
-}
+};
 
 export default SignUpPage;

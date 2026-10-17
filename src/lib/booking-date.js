@@ -1,5 +1,6 @@
 /**
- * Converts HeroUI / @internationalized/date values to an ISO string for the API.
+ * Normalises a picked date to an ISO string for the API. Accepts a native
+ * `<input type="date">` string, a Date, or a `{year, month, day}` calendar object.
  */
 export function toBookingDateISO(dateValue) {
   if (!dateValue) return null;

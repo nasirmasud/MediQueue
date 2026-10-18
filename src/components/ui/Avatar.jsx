@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { cn } from "./cn";
 
 const WRAP = "relative inline-flex shrink-0";
@@ -46,18 +49,21 @@ export function Avatar({
   className,
   ...props
 }) {
-  const initial = (name ?? alt).trim().charAt(0).toUpperCase();
+  const [failedSrc, setFailedSrc] = useState(null);
+  const initial = (name ?? alt ?? "").trim().charAt(0).toUpperCase();
+  const showImage = Boolean(src) && failedSrc !== src;
 
   return (
     <span className={cn(WRAP, SIZES[size], className)} {...props}>
       <span className={cn(CIRCLE, "h-full w-full", RINGS[ring])}>
-        {src ? (
+        {showImage ? (
           <Image
             src={src}
             alt={alt}
             width={PIXELS[size] ?? 40}
             height={PIXELS[size] ?? 40}
             referrerPolicy={referrerPolicy}
+            onError={() => setFailedSrc(src)}
             className='h-full w-full object-cover'
           />
         ) : (

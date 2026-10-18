@@ -6,7 +6,7 @@ import { TUTOR_RECRUIT } from "@/lib/demo";
 
 const TutorRecruit = () => {
   return (
-    <Section tone='surface' spacing='none' className='py-14'>
+    <Section tone='surface' spacing='none' className='py-28'>
       <div className='p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-surface-container-low via-surface-container to-surface-container-high shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8'>
         <div className='max-w-xl'>
           <Eyebrow tone='tertiary'>{TUTOR_RECRUIT.eyebrow}</Eyebrow>

@@ -11,7 +11,7 @@ const TRUST_ICONS = {
 
 const FinalCta = () => {
   return (
-    <section className='w-full bg-gradient-to-b from-surface via-surface-container-lowest to-[#070420] py-24 relative overflow-hidden'>
+    <section className='w-full bg-gradient-to-b from-surface via-surface-container-lowest to-[#070420] py-32 relative overflow-hidden'>
       <div
         aria-hidden='true'
         className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-primary-container/20 blur-[130px] pointer-events-none'

@@ -1,11 +1,31 @@
 # MediQueue — Clinical Indigo Redesign Plan
 
-> **Status:** in progress — Phase 0 complete, Phase 1 next
+> **Status:** Phases 0–10 complete. **Phase 11 complete 2026-10-17** (cleanup automated;
+> the visual half of the manual pass is outstanding — see the checklist below).
+> Phases 12a–f are the remaining work.
 > **Scope:** `mediqueue-client` (Next.js 16 frontend) for Phases 1–11.
 > `mediqueue-backend` work is confined to **Phase 12**, the final phase.
 > **Sources:** `code.html` (**visual/design source of truth**), `DESIGN-tobe.md` (token
-> vocabulary, component spec), `FIXES.md` (defect list), `DESIGN-old.md` (current system audit)
-> **Last updated:** 2026-10-07
+> vocabulary, component spec), `FIXES.md` (defect list), `DESIGN-old.md` (pre-redesign audit)
+> **Last updated:** 2026-10-17
+
+## Phase index
+
+| Phase | Scope | Status |
+| --- | --- | --- |
+| 0 | Baseline | ✅ COMPLETE |
+| 1 | Curated demo data | ✅ COMPLETE |
+| 2 | Token layer (`globals.css`) | ✅ COMPLETE |
+| 3 | Primitive library (`components/ui/`) | ✅ COMPLETE |
+| 4 | HeroUI off the home path | ✅ COMPLETE |
+| 5 | Layout primitives + mobile nav | ✅ COMPLETE |
+| 6 | Global chrome | ✅ COMPLETE |
+| 7 | Home §1–2 | ✅ COMPLETE |
+| 8 | Home §3–6 | ✅ COMPLETE |
+| 9 | Home §7–15 | ✅ COMPLETE |
+| 10 | Remaining pages | ✅ COMPLETE |
+| 11 | Cleanup & verification | 🟡 PARTIAL — cleanup + automated gates done, visual manual pass outstanding |
+| 12 | Backend work | ⬜ NOT STARTED |
 
 ## Decisions (locked)
 
@@ -130,8 +150,11 @@ Demo data must be realistic enough that no design decision is made against a pla
 - [x] `DEMO_OWNER` export so `my-tutors` has a real owner to filter on
 - [x] `DEMO_TUTORS_EXTENDED` — 4 more tutors so `/tutors` is not a copy of the home grid.
       Owned by a different `addedBy` so the My Tutors filter has something to exclude
-- [ ] ⚠️ **Portrait files not yet added.** Paths are declared (`/images/tutors/*.jpg`) but
-      `public/images/` does not exist. `Avatar` must fall back to initials until they land
+- [x] ⚠️ **Portrait files not yet added.** Closed 2026-10-17. Resolved by decision rather
+      than by adding files: every tutor's `image` is `null`, and `Avatar` gained an
+      `onError` fallback to initials. The prototype's `googleusercontent` URLs were never
+      committed, so there is nothing to break. Restoring paths means committing real
+      portraits to `public/images/tutors/` first.
 
 ### `demo/content.js`
 
@@ -186,38 +209,56 @@ Demo data must be realistic enough that no design decision is made against a pla
 
 ## Phase 2 — Token layer (`src/app/globals.css`)
 
+> **Status: COMPLETE.** `globals.css` is 297 lines. Verified 2026-10-17: both token tiers
+> emit, all three fonts load, `.dark` re-points `--mq-*`, `prefers-reduced-motion` is present.
+
 Rewrite `globals.css` (22 → ~260 lines). Tailwind v4 has **no** config file, so `@theme` is
 the entire token surface. Where `DESIGN-tobe.md` and `code.html` disagree, **`code.html` wins.**
 
-- [ ] Dark set transcribed verbatim from `code.html`'s Tailwind config:
+- [x] Dark set transcribed verbatim from `code.html`'s Tailwind config:
       `surface #131315` · `surface-container-lowest #0e0e10` · `-low #1c1b1d` ·
       `-container #201f22` · `-high #2a2a2c` · `-highest #353437` ·
       `primary #c3c0ff` · `primary-container #4f46e5` · `secondary #d0bcff` ·
       `secondary-container #571bc1` · `tertiary #68dba9` · `tertiary-container #006e4c` ·
       `error #ffb4ab` · `outline #918fa1` · `outline-variant #464555` ·
-      `surface-tint #c3c0ff` + every `on-*` pair
-- [ ] Light set derived as a tonal inversion, same token names so utilities don't change
-      ⚠️ ~50 invented tokens, no source of truth in either doc — review before Phase 3 ships
-- [ ] Type scale: the 10 `--text-*` tokens from `code.html`'s config, verbatim
-- [ ] Spacing: `space-xs/sm/md/lg/xl` + `gutter`/`margin`, 4px baseline
-- [ ] Radii: use the values the `code.html` markup actually produces —
+      `surface-tint #c3c0ff` + every `on-*` pair — `globals.css:202-258`
+- [x] Light set derived as a tonal inversion, same token names so utilities don't change
+      ⚠️ ~50 invented tokens, no source of truth in either doc — **reviewed 2026-10-17, accepted.**
+      Each light container reuses the pairing the dark set already ships as `*-fixed` /
+      `on-*-fixed`, so no accent is invented — `globals.css:138-200`
+- [x] Type scale: the 10 `--text-*` tokens from `code.html`'s config, verbatim
+      — `globals.css:75-120`, in `@theme static` so every rung emits
+- [x] Spacing: `space-xs/sm/md/lg/xl` + `gutter`/`margin`, 4px baseline — `globals.css:122-128`
+- [x] Radii: use the values the `code.html` markup actually produces —
       ⚠️ its config declares `DEFAULT .25rem / lg .5rem / xl .75rem` but its markup uses
-      `rounded-xl` / `rounded-2xl` / `rounded-3xl` (Tailwind defaults). The declared values
-      are dead
-- [ ] Elevation: **mirror `code.html` exactly** — `shadow-sm` on metric/review cards,
+      `rounded-xl` / `rounded-2xl` / `rounded-3xl` (Tailwind defaults). **Decision: follow the
+      markup.** Tailwind's default scale, no custom radius tokens
+- [x] Elevation: **mirror `code.html` exactly** — `shadow-sm` on metric/review cards,
       `shadow-md` on tutor and step cards, `shadow-lg` on step cards, `shadow-xl` on the
-      comparison table, `shadow-2xl` on the classroom console and the final CTA, and the
-      custom `shadow-[0_1px_8px_rgba(0,0,0,0.04)]` on the fixed header and footer top edge
-- [ ] Hero ambience as reusable classes: three 140px blur orbs + 24px dot grid at 3.5% opacity
-- [ ] Motion: 300ms `cubic-bezier(.4,0,.2,1)`, `card-lift`, `beacon`, `animate-ping`,
-      global `prefers-reduced-motion` kill switch (FIXES #13)
-- [ ] `.tabular` utility (`font-variant-numeric: tabular-nums`) for ৳ rates, timestamps
-- [ ] Drop `@import "@heroui/styles"` and `@plugin "daisyui"`; define `--color-base-*` locally first
-- [ ] Fix `layout.js:7-11` — `next/font` variable doesn't match the `@theme` token, so
-      Plus Jakarta Sans never loads today (FIXES #1)
-- [ ] Add Space Grotesk (`code.html` uses it for the hero eyebrow) + mono stack for ECG readouts
-- [ ] Drop Instrument Serif / Outfit / Syne — used 0, 1, 1 times respectively (the link tag itself)
-- [ ] Blocking inline theme-init script + `suppressHydrationWarning` — no FOUC (FIXES #10)
+      comparison table, `shadow-2xl` on the classroom console and the final CTA, and
+      `--shadow-edge-top` / `--shadow-edge-bottom` (`0 1px 8px rgba(0,0,0,0.04)`) on the
+      fixed header and footer top edge — `globals.css:130-132`
+- [x] Hero ambience — **closed by decision 2026-10-17.** `hero-ambience`, `hero-orb` and
+      `hero-grid` were declared here and never adopted; `Slider.jsx:50-54` and
+      `FinalCta.jsx:17` inline the same markup with raw arbitrary values. **Deleted** rather
+      than wired up, to keep this a cleanup phase and leave the hero's pixels untouched.
+      Consequence accepted: 2 prototype hex values survive in `src/` — `#080614` at
+      `Slider.jsx:49` and `#c3c0ff` at `Slider.jsx:54`. Both are `code.html`'s own values
+- [x] Motion: 300ms `cubic-bezier(.4,0,.2,1)`, `card-lift`, `beacon`, global
+      `prefers-reduced-motion` kill switch (FIXES #13) — `globals.css:134-135, 283-288, 290-297`
+- [x] `.tabular` utility (`font-variant-numeric: tabular-nums`) for ৳ rates, timestamps
+      — `globals.css:279-281`, used 13× on `/`
+- [x] Drop `@import "@heroui/styles"` and `@plugin "daisyui"` ✅ **done 2026-10-17 (Phase 11).**
+      Both packages are uninstalled; zero daisyUI tokens or HeroUI residue remain in the
+      compiled CSS (verified by grepping the built stylesheet)
+- [x] Fix `layout.js:7-11` — `next/font` variable now matches the `@theme` token, so
+      Plus Jakarta Sans loads (FIXES #1). Verified: `--font-jakarta`, `--font-space-grotesk`,
+      `--font-jetbrains-mono` all resolve in the built CSS — `layout.js:8-27`
+- [x] Add Space Grotesk (`code.html` uses it for the hero eyebrow) + JetBrains Mono for
+      ECG readouts — `layout.js:16-27`
+- [x] Drop Instrument Serif / Outfit / Syne — used 0, 1, 1 times respectively
+- [x] Blocking inline theme-init script + `suppressHydrationWarning` — no FOUC (FIXES #10)
+      — `layout.js:29-39, 60-65`
 
 ---
 
@@ -272,92 +313,107 @@ landed in Phase 10, so `src/` now has zero HeroUI imports:
 
 ## Phase 5 — Layout primitives + mobile nav
 
+> **Status: COMPLETE.** All seven files exist in `src/components/ui/`.
+
 Layout primitives consume the Phase 1 demo data (e.g. `Section` renders `Eyebrow` +
 `SectionHeading` from `content.js`).
 
-- [ ] `Container.jsx` — `max-w-7xl px-6 lg:px-12`; kills the 6 competing `max-w-*`
-- [ ] `SectionHeading.jsx` — eyebrow/heading/sub; kills the 4× duplication (FIXES #22)
-- [ ] `Section.jsx` — owns alternating `bg-surface` / `bg-surface-container-lowest` +
+- [x] `Container.jsx` — `max-w-7xl px-6 lg:px-12`; kills the 6 competing `max-w-*`
+- [x] `SectionHeading.jsx` — eyebrow/heading/sub; kills the 4× duplication (FIXES #22)
+- [x] `Section.jsx` — owns alternating `bg-surface` / `bg-surface-container-lowest` +
       `py-20` / `py-16` rhythm
-- [ ] `Eyebrow.jsx` — `label-sm` uppercase tinted eyebrow, used in 8 sections
-- [ ] `BottomNav.jsx` — **net-new.** ⚠️ `code.html` has `hidden xl:flex` desktop nav, so
+- [x] `Eyebrow.jsx` — `label-sm` uppercase tinted eyebrow, used in 8 sections
+- [x] `BottomNav.jsx` — **net-new.** ⚠️ `code.html` has `hidden xl:flex` desktop nav, so
       `md`→`xl` is a dead zone with no nav at all, and no hamburger or bottom nav exists.
       Fixed bar, safe-area padding, blurred `bg-surface/80`, active `primary-container`
-      + luminous dot, per `DESIGN-tobe.md` §Bottom Navigation
-- [ ] Mobile drawer for the header, since `code.html` has none
+      + luminous dot, per `DESIGN-tobe.md` §Bottom Navigation. Mounted in `layout.js`
+- [x] Mobile drawer for the header, since `code.html` has none — `NavDrawer.jsx`
 
 ---
 
 ## Phase 6 — Global chrome
 
-- [ ] `Navbar.jsx` — port `code.html`'s `fixed` header verbatim: `h-16`, `max-w-7xl`,
+> **Status: COMPLETE.** `ThemeToggle`, `NavDrawer`, `NewsletterForm`, `NotFoundContent`
+> all exist and are mounted.
+
+- [x] `Navbar.jsx` — port `code.html`'s `fixed` header verbatim: `h-16`, `max-w-7xl`,
       `bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]`, pill nav
       container (`bg-surface-container-low rounded-full`, active
       `bg-surface-container-high text-on-surface font-label-md`), `xl:flex`, theme toggle,
-      Sign Up / Sign In pills, avatar. Add hamburger + drawer, since `code.html` has none.
-      Keep the working drawer logic already in the file
-- [ ] Theme toggle — real fix for FIXES #3 and #10: storage-backed, `system` default,
-      no FOUC, `.dark` drives the M3 set
-- [ ] `Footer.jsx` — port `code.html`'s 6-column footer verbatim, including the
-      `shadow-[0_-1px_8px_rgba(0,0,0,0.04)]` top edge and the BMDC-verified pill.
-      Current footer is on daisyUI tokens and stays light in dark mode; that dies here (FIXES #3)
-- [ ] `Footer.jsx` newsletter `onSubmit` + toast (FIXES #12)
-- [ ] `Footer.jsx` dead `#` links — reduce to real routes (FIXES #11)
-- [ ] `not-found.jsx` + `components/NotFoundContent.jsx` — retoken; `sr-only` on status
+      Sign Up / Sign In pills, avatar. Hamburger + drawer added, since `code.html` has none
+- [x] Theme toggle — real fix for FIXES #3 and #10: storage-backed (`mq-theme`), `system`
+      default, no FOUC, `.dark` drives the M3 set. Extracted to `ThemeToggle.jsx`
+- [x] `Footer.jsx` — port `code.html`'s 6-column footer verbatim, including the
+      `shadow-edge-bottom` top edge and the BMDC-verified pill. **The daisyUI `base-*`
+      tokens are gone**, so the footer now changes with the theme (FIXES #3)
+- [x] `Footer.jsx` newsletter `onSubmit` + toast — extracted to `NewsletterForm.jsx` (FIXES #12)
+- [x] `Footer.jsx` dead `#` links — reduced to real routes (FIXES #11)
+- [x] `not-found.jsx` + `components/NotFoundContent.jsx` — retoken; `sr-only` on status
       dots (FIXES #16); `aria-label` on icon-only buttons (FIXES #14)
 
 ---
 
 ## Phase 7 — Home §1–2
 
-- [ ] `Slider.jsx` → single centered hero, `code.html` §1 verbatim: `bg-[#080614]`,
+> **Status: COMPLETE.** The Swiper hero and the `/all-courses` 404 are gone.
+
+- [x] `Slider.jsx` → single centered hero, `code.html` §1 verbatim: `bg-[#080614]`,
       `border-b border-outline-variant/30`, three glow orbs (`primary-container/20`,
       `secondary-container/20`, `tertiary-container/20` at 130–140px blur), 24px dot grid
       at 3.5% opacity, ping-beacon eyebrow in Space Grotesk, `headline-lg` H1 with
       `from-primary via-surface-tint to-tertiary` gradient span, two pill CTAs
-- [ ] Drop the 4-slide Swiper, feathered circular image, and both floating glass badges —
+- [x] Drop the 4-slide Swiper, feathered circular image, and both floating glass badges —
       `code.html` has none. Deletes the `/all-courses` 404 (FIXES #7) and inverted height
-      scale (FIXES #21) by removal
-- [ ] `animate-ping` on the beacon, `motion-safe:` guarded (FIXES #13)
-- [ ] §2 filter bar — `code.html` §2 verbatim: `bg-surface-container-low py-4 shadow-sm`,
+      scale (FIXES #21) by removal. **Verified: `/` renders exactly one `<h1>`** (FIXES #6)
+- [x] `animate-ping` on the beacon — the global `prefers-reduced-motion` kill switch in
+      `globals.css` covers this app-wide (FIXES #13)
+- [x] §2 filter bar — `code.html` §2 verbatim: `bg-surface-container-low py-4 shadow-sm`,
       `w-full md:w-80` search input, `overflow-x-auto` college-pill carousel, active pill
-      `bg-primary-container text-white`
-- [ ] ⚠️ Pills filter demo data client-side on `institution`. A server-side query param is the
+      `bg-primary-container text-white`. Extracted to `FilterBar.jsx` + `TutorFilterContext.jsx`
+- [x] ⚠️ Pills filter demo data client-side on `institution`. A server-side query param is the
       better long-term fix — Phase 12
 
 ---
 
 ## Phase 8 — Home §3–6
 
-- [ ] `AvailableTutors.jsx` → §5 grid, `code.html` §5 verbatim, reading from
+> **Status: COMPLETE.** `TrustMetrics`, `SubjectTracks`, `AvailableTutors`, `HowItWorks`
+> all exist.
+
+- [x] `AvailableTutors.jsx` → §5 grid, `code.html` §5 verbatim, reading from
       `getFeaturedTutors()` in `@/lib/demo`. try/catch so a data error can't hard-500 the
-      home page (FIXES #9); drop `min-h-screen` (FIXES #5); new copy so it stops duplicating
-      `/tutors` (FIXES #6)
-- [ ] `HowItWorks.jsx` → §6: `01/02/03` badge overflowing the card top
+      home page (FIXES #9); `min-h-screen` dropped (FIXES #5); heading reworded to
+      "Featured Medical Mentors" so it no longer duplicates `/tutors` (FIXES #6).
+      **`/` is now static (`○`) — it no longer fetches with `cache: "no-store"`**
+- [x] `HowItWorks.jsx` → §6: `01/02/03` badge overflowing the card top
       (`absolute -top-5 w-10 h-10 rounded-full bg-primary-container`), 64px icon tile with
       `group-hover:scale-110`
-- [ ] §3 metrics bar — new, from `TRUST_METRICS`, `code.html` §3 verbatim
-- [ ] §4 subject grid — new, from `SUBJECT_TRACKS`, `code.html` §4 verbatim.
+- [x] §3 metrics bar — new, from `TRUST_METRICS`, `code.html` §3 verbatim — `TrustMetrics.jsx`
+- [x] §4 subject grid — new, from `SUBJECT_TRACKS`, `code.html` §4 verbatim — `SubjectTracks.jsx`.
       Counts come from demo data, not the live API's 5 subjects
 
 ---
 
 ## Phase 9 — Home §7–15
 
+> **Status: COMPLETE.** All nine components exist and are rendered by `src/app/page.js`
+> in `code.html` order.
+
 Nine new components, all from `content.js`, all matching `code.html` verbatim:
 
-- [ ] `LiveClassroom.jsx` (§7, demo-flagged) — 7/5 split, inline SVG ECG trace, mentor feed
-- [ ] `CollegeRail.jsx` (§8)
-- [ ] `ProfTracks.jsx` (§9) — includes the `-top-3.5` "Most Popular" ribbon
-- [ ] `Testimonials.jsx` (§10) — 5-star rows with the `FILL` axis equivalent
-- [ ] `WhyChooseUs.jsx` (§11, + comparison table)
-- [ ] `Toolkits.jsx` (§12) — `Download PDF` / `Download Slides` / `Download Matrix` /
+- [x] `LiveClassroom.jsx` (§7, demo-flagged) — 7/5 split, inline SVG ECG trace, mentor feed
+- [x] `CollegeRail.jsx` (§8)
+- [x] `ProfTracks.jsx` (§9) — includes the `-top-3.5` "Most Popular" ribbon
+- [x] `Testimonials.jsx` (§10) — 5-star rows with the `FILL` axis equivalent
+- [x] `WhyChooseUs.jsx` (§11, + comparison table)
+- [x] `Toolkits.jsx` (§12) — `Download PDF` / `Download Slides` / `Download Matrix` /
       `Download Guide` CTAs retained as normal buttons, delivery deferred to Phase 12
-- [ ] `Faq.jsx` (§13)
-- [ ] `TutorRecruit.jsx` (§14) — `Apply as a Medical Tutor` → `/add-tutor`
-- [ ] `FinalCta.jsx` (§15) — `Book a Mentor Today` → `/#tutors-directory`
-- [ ] `page.js` — reorder imports above the `metadata` export (FIXES #23)
-- [ ] Remove the last `swiper` usage → dependency goes
+- [x] `Faq.jsx` (§13)
+- [x] `TutorRecruit.jsx` (§14) — `Apply as a Medical Tutor` → `/add-tutor`
+- [x] `FinalCta.jsx` (§15) — `Book a Mentor Today` → `/#tutors-directory`
+- [x] `page.js` — imports hoisted above the `metadata` export (FIXES #23)
+- [x] Remove the last `swiper` usage → dependency uninstalled in Phase 11. **Verified: zero
+      `swiper` imports remain in `src/`**
 
 ---
 
@@ -406,35 +462,109 @@ Nine new components, all from `content.js`, all matching `code.html` verbatim:
 - [x] `BookingCancelAlert.jsx` — the confirm sentence read as
       "`<Name>` Are You Sure You Want To Delete"
 
-### Left alone deliberately
+### Left alone deliberately — decisions taken 2026-10-17, deferred to Phase 12
 
-- [ ] `BookingModal.jsx:33` — `defaultDateString` still falls back to the hardcoded
-      `"2026-05-25"`, which is now in the past. Phase 10's brief was "logic untouched",
-      so this needs a decision before it silently books a past date
+- [ ] `BookingModal.jsx:36` — `defaultDateString` still falls back to the hardcoded
+      `"2026-05-25"`, which is now in the past. **Decision: use today's date**, so the
+      field never prefills a date the user cannot book. Tutor's own `startDate` still wins.
 - [ ] `BookingCancelAlert.jsx` — `window.location.reload()` fires immediately after the
       DELETE, so the `deletedCount` branch and its toasts are dead code, and a second
-      reload fires 1.5s later. Behaviour preserved exactly; needs a decision
-- [ ] `booked-sessions/page.jsx` — the `Join` button has no handler. Retokened as a
-      `Button`, but it still does nothing
+      reload fires 1.5s later. **Decision: remove both reloads**, keep the toasts, refresh
+      the list from local state instead.
+- [ ] `booked-sessions/page.jsx` — the `Join` button has no handler. **Decision: disable
+      it** and label it as demo-only, rather than delete it, so the route still reads as a
+      real screen until Phase 12c ships a join endpoint.
 
 ---
 
 ## Phase 11 — Cleanup & verification
 
-- [ ] Remove `daisyui`, `@heroui/react`, `@heroui/styles`, `react-icons`,
-      `@gravity-ui/icons`, `swiper` from `package.json`
-- [ ] Confirm zero `@heroui/react` imports remain across `src/`
-- [ ] Consolidate icons on `lucide-react` via a ~60-entry mapping table from Material
-      Symbols (incl. the `FILL` axis trick for favorite hearts + star ratings)
-- [ ] Fix prototype image sources ⚠️ all 11 point at `lh3.googleusercontent.com` and use
-      `data-alt` (a no-op attribute — real `alt` is empty). Will likely expire and is
-      inaccessible
-- [ ] Correct `README.md` — claims TanStack Query + Axios; neither is installed (FIXES #19)
-- [ ] Delete dead `.swap` CSS in `globals.css` (FIXES #20)
-- [ ] Run `npm run lint`, diff against Phase 0 baseline (FIXES #24)
-- [ ] Run `npm run build`
-- [ ] Manual pass, both themes, every route — against a checklist written at Phase 11 start
-- [ ] Update `DESIGN-old.md`; annotate `DESIGN-tobe.md` with what shipped
+> **Status: PARTIAL — 2026-10-17.** Every automated gate passes. The **visual** half of
+> the manual pass is outstanding and needs a human eye in a browser; it is listed below
+> and has deliberately not been ticked.
+
+### Automated gates — all passing
+
+- [x] Remove `@heroui/react`, `@heroui/styles`, `react-icons`, `@gravity-ui/icons`,
+      `swiper` from `dependencies` and `daisyui` from `devDependencies`. All six verified
+      to have zero imports in `src/` first. `npm install` pruned 53 packages
+- [x] Delete the last HeroUI trace — `@import "@heroui/styles"` from `globals.css`.
+      ⚠️ `@custom-variant dark` was **kept**: Tailwind v4's built-in `dark` is a
+      `prefers-color-scheme` media query, which would ignore an explicit light choice.
+      Only its comment changed, to stop it claiming to override HeroUI
+- [x] Confirm zero `@heroui/react` imports remain across `src/` — and zero in the
+      **compiled CSS** too: grepping the built stylesheet for `heroui`, `daisyui`,
+      `--nextui` and `data-focus-visible` returns 0 hits each
+- [x] Consolidate icons on `lucide-react`. Every component imports from `lucide-react`.
+      `GoogleMark.jsx` is the one exception — `lucide-react` dropped brand logos, so the
+      Google glyph had no replacement to migrate to
+- [x] Fix prototype image sources ⚠️ closed by decision rather than by adding files: all 10
+      demo tutors have `image: null` and `Avatar` falls back to initials. Nothing points at
+      `googleusercontent` any more. **Verified: zero `/images/` references in the rendered
+      HTML of any route**, and `public/images/` was never created
+- [x] Correct `README.md` — the tech-stack table claimed TanStack Query, Axios, DaisyUI,
+      HeroUI and Swiper, none of which are installed. Now describes the RSC + `fetch` +
+      `useState` model and the local primitives. Also corrected the route-protection bullet,
+      which omitted `/tutors/[id]`
+- [x] Delete dead CSS ✅ — `.swap` was already gone. `hero-ambience`, `hero-orb` and
+      `hero-grid` removed 2026-10-17; all three were declared and never used. `globals.css`
+      is now 297 lines
+- [x] Run `npm run lint`, diff against Phase 0 baseline — **0 problems**, matches the bar
+- [x] Run `npm run build` — **passes** in 19.1s, 11 routes, no type errors
+
+### Route sweep — automated, all passing
+
+Verified against a running dev server on `:3000`:
+
+| Route | Expected | Got |
+| --- | --- | --- |
+| `/` | 200, one `<h1>` | ✅ 200, exactly one `<h1>` |
+| `/tutors` | 200 | ✅ |
+| `/tutors/[id]` | 307 → `/sign-in` | ✅ |
+| `/add-tutor` | 307 → `/sign-in` | ✅ |
+| `/my-tutors` | 307 → `/sign-in` | ✅ |
+| `/booked-sessions` | 307 → `/sign-in` | ✅ |
+| `/profile` | 200 | ✅ |
+| `/sign-in` | 200 | ✅ |
+| `/sign-up` | 200 | ✅ |
+| `/_not-found` | 404 | ✅ |
+
+Also confirmed in the compiled CSS: both token tiers emit (`--mq-surface` appears twice —
+`:root` and `.dark`), `.card-lift` and `.tabular` are generated and `tabular` is used 13×
+on `/`, and the `prefers-reduced-motion` block is present. All three fonts resolve.
+
+### Manual pass — ⚠️ OUTSTANDING, needs a browser
+
+Per route, in **both** light and dark: layout against `code.html`, token colours, focus
+rings, keyboard reachability, console errors.
+
+- [ ] `/` — hero orbs + dot grid, all 15 sections, filter pills actually filter
+- [ ] `/tutors` — filter bar, pills, empty state
+- [ ] `/tutors/[id]` — booking card, sticky behaviour
+- [ ] `/add-tutor` — form validation
+- [ ] `/my-tutors` — list, inline edit/delete modals
+- [ ] `/booked-sessions` — session rows, the inert `Join` button
+- [ ] `/profile` — session-gated states
+- [ ] `/sign-in` / `/sign-up` — validation, Google button
+- [ ] `/` + `/tutors` at `375px`, `768px`, `1280px`, `1536px` — the `md`→`xl` nav dead zone
+- [ ] Theme toggle — persistence across reload, no FOUC, footer follows (FIXES #3)
+
+### Documentation
+
+- [x] `DESIGN-old.md` — relabelled as a pre-redesign audit with a ⚠️ banner, plus a new
+      §0 "What shipped" delta table
+- [x] `DESIGN-tobe.md` — annotated with an implementation-status section: every divergence
+      from the spec, where the tokens actually live, and what was not implemented and why
+
+---
+
+## Open items found during Phase 11
+
+- [x] ~~`hero-ambience` / `hero-orb` / `hero-grid` were declared and never used.~~ **Closed
+      2026-10-17 — deleted.** `Slider.jsx:50-54` and `FinalCta.jsx:17` inline the same
+      markup, so the hero was never affected. 2 prototype hex values (`#080614`,
+      `#c3c0ff`) remain in `src/` by accepted consequence; both are `code.html`'s own values
+- [ ] Auth redirects carry no `callbackUrl` (FIXES #8) — recorded in the README now, still open
 
 ---
 
@@ -558,21 +688,27 @@ something real to render from Phase 10 onward.
 
 ## Open risks
 
-- [ ] **The light M3 set is ~50 invented tokens** sitting underneath every other phase.
-      Nothing in either doc defines a light palette. Review the ramp before Phase 2 ships
-- [ ] **Phase 4's exit criterion is partial by design** — 10 HeroUI import sites survive
-      until Phase 10. Two systems coexist until then, but each phase's page is fully custom
+- [x] **The light M3 set is ~50 invented tokens** sitting underneath every other phase.
+      **Reviewed 2026-10-17 and accepted.** Each light container reuses the pairing the dark
+      set already ships as `*-fixed` / `on-*-fixed`, so no accent hue was invented — only
+      the neutral surfaces were lifted. Documented in `globals.css:143-145`
+- [x] **Phase 4's exit criterion was partial by design** — resolved. The 10 HeroUI import
+      sites all landed in Phase 10; `src/` has had zero HeroUI imports since
 - [ ] **All 15 sections are demo content, not features**, until Phase 12. Buttons render
       and are clickable; nothing happens yet. This is the accepted cost of matching
       `code.html` closely
-- [ ] **`DESIGN-tobe.md` and `code.html` contradict each other on elevation.** Following
-      `code.html` per the locked decision — cards use the prototype's shadows, not the
-      spec's flat L1
+- [x] **`DESIGN-tobe.md` and `code.html` contradict each other on elevation.** Resolved per
+      the locked decision — `code.html`'s shadows win. Recorded in the annotation at the top
+      of `DESIGN-tobe.md`
 - [ ] **No test suite and no CI** until Phase 12d. Lint + build + manual checklist are the
       only gates through Phase 11
-- [ ] **`code.html` has no mobile navigation at all** — the `md`→`xl` dead zone and the
-      bottom nav are net-new design work, not a port
-- [ ] **Demo tutor portraits must be committed as local files.** The prototype's
-      `googleusercontent` URLs will expire and use `data-alt`, which does nothing
+- [x] **`code.html` has no mobile navigation at all** — resolved. `BottomNav.jsx` and
+      `NavDrawer.jsx` are net-new design work, built and mounted
+- [x] **Demo tutor portraits must be committed as local files** — closed by decision.
+      Every tutor is `image: null` with an initials fallback, so no portrait path exists to
+      expire. Real portraits are a Phase 12 concern alongside the live-API cutover
 - [ ] **The backend is unauthenticated on 7 of 12 routes.** Frontend work is safe because
       it doesn't widen that exposure, but Phase 12c must not ship before 12d
+- [ ] ⚠️ **Phase 11's visual verification is not done.** Lint, build, route status, token
+      emission and font loading are all machine-checked. Nobody has looked at the pages in a
+      browser in either theme. The checklist above is the remaining work.

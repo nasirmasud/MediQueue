@@ -10,6 +10,11 @@
  *   tutorEmail, addedBy
  *
  * Values reproduce `code.html` section 5 exactly.
+ *
+ * `image` is null on every record. The prototype points its portraits at
+ * `lh3.googleusercontent.com` URLs that expire, so there is no local file to
+ * commit yet; `Avatar` renders its initials state instead. Restore the paths
+ * once real portraits land in `public/images/tutors/`.
  */
 
 /** Shared demo owner, so `my-tutors` has something real to render. */
@@ -33,7 +38,7 @@ export const DEMO_TUTORS = [
     experienceYears: 6,
     district: "Dhaka",
     address: "Green Road, Dhanmondi",
-    image: "/images/tutors/ariful-islam.jpg",
+    image: null,
     tutorEmail: "ariful.islam@mediqueue.app",
     addedBy: DEMO_OWNER.email,
   },
@@ -50,7 +55,7 @@ export const DEMO_TUTORS = [
     experienceYears: 4,
     district: "Chattogram",
     address: "Chawkbazar, IPC Area",
-    image: "/images/tutors/nusrat-jahan.jpg",
+    image: null,
     tutorEmail: "nusrat.jahan@mediqueue.app",
     addedBy: DEMO_OWNER.email,
   },
@@ -67,7 +72,7 @@ export const DEMO_TUTORS = [
     experienceYears: 2,
     district: "Sylhet",
     address: "Subidbazar",
-    image: "/images/tutors/tahsin-ahmed.jpg",
+    image: null,
     tutorEmail: "tahsin.ahmed@mediqueue.app",
     addedBy: DEMO_OWNER.email,
   },
@@ -84,7 +89,7 @@ export const DEMO_TUTORS = [
     experienceYears: 5,
     district: "Rajshahi",
     address: "Kazihata, Medical Road",
-    image: "/images/tutors/sajid-hasan.jpg",
+    image: null,
     tutorEmail: "sajid.hasan@mediqueue.app",
     addedBy: DEMO_OWNER.email,
   },
@@ -101,7 +106,7 @@ export const DEMO_TUTORS = [
     experienceYears: 7,
     district: "Dhaka",
     address: "Sector 4, Uttara",
-    image: "/images/tutors/fariha-zaman.jpg",
+    image: null,
     tutorEmail: "fariha.zaman@mediqueue.app",
     addedBy: DEMO_OWNER.email,
   },
@@ -118,7 +123,7 @@ export const DEMO_TUTORS = [
     experienceYears: 3,
     district: "Mymensingh",
     address: "Charpara",
-    image: "/images/tutors/asif-iqbal.jpg",
+    image: null,
     tutorEmail: "asif.iqbal@mediqueue.app",
     addedBy: DEMO_OWNER.email,
   },
@@ -142,7 +147,7 @@ export const DEMO_TUTORS_EXTENDED = [
     experienceYears: 3,
     district: "Chattogram",
     address: "Chawkbazar, IPC Area",
-    image: "/images/tutors/nusrat-jahan.jpg",
+    image: null,
     tutorEmail: "nusrat.jahan@mediqueue.app",
     addedBy: "other.owner@mediqueue.app",
   },
@@ -159,7 +164,7 @@ export const DEMO_TUTORS_EXTENDED = [
     experienceYears: 8,
     district: "Dhaka",
     address: "Mohammadpur, Dhaka",
-    image: "/images/tutors/rafiq-mahmud.jpg",
+    image: null,
     tutorEmail: "rafiq.mahmud@mediqueue.app",
     addedBy: "other.owner@mediqueue.app",
   },
@@ -176,7 +181,7 @@ export const DEMO_TUTORS_EXTENDED = [
     experienceYears: 2,
     district: "Khulna",
     address: "Boyra, Khulna",
-    image: "/images/tutors/sabrina-haque.jpg",
+    image: null,
     tutorEmail: "sabrina.haque@mediqueue.app",
     addedBy: "other.owner@mediqueue.app",
   },
@@ -193,7 +198,7 @@ export const DEMO_TUTORS_EXTENDED = [
     experienceYears: 9,
     district: "Rangpur",
     address: "Station Road, Rangpur",
-    image: "/images/tutors/imran-chowdhury.jpg",
+    image: null,
     tutorEmail: "imran.chowdhury@mediqueue.app",
     addedBy: "other.owner@mediqueue.app",
   },

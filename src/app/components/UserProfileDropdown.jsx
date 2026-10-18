@@ -1,19 +1,40 @@
 "use client";
 
+import { Avatar } from "@/components/ui/Avatar";
 import { authClient } from "@/lib/auth-client";
-import { Avatar, Dropdown, Label } from "@heroui/react";
 import { ChevronDown, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useId, useRef, useState } from "react";
+
+const ITEMS = [
+  { key: "profile", label: "Profile", icon: User, tone: "text-primary" },
+  { key: "logout", label: "Sign Out", icon: LogOut, tone: "text-error" },
+];
 
 const UserProfileDropdown = ({ user, onNavigate }) => {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
+  const menuId = useId();
 
-  const getFallbackName = () => {
-    if (user?.name) {
-      return user.name.trim().charAt(0).toUpperCase();
-    }
-    return "M";
-  };
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event) => {
+      if (!containerRef.current?.contains(event.target)) setOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -22,50 +43,66 @@ const UserProfileDropdown = ({ user, onNavigate }) => {
   };
 
   const handleAction = (key) => {
+    setOpen(false);
+
     if (key === "profile") {
       onNavigate?.();
       router.push("/profile");
       return;
     }
+
     if (key === "logout") {
       handleSignOut();
     }
   };
 
   return (
-    <Dropdown>
-      <Dropdown.Trigger
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
         aria-label="User menu"
-        className="flex items-center gap-2.5 pl-1 pr-2 h-9 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
+        onClick={() => setOpen((value) => !value)}
+        className="flex h-9 cursor-pointer items-center gap-2.5 rounded-full bg-surface-container pl-1 pr-2 transition-colors hover:bg-surface-container-high"
       >
-        <Avatar className="w-7 h-7">
-          <Avatar.Image
-            alt={user?.name || "User"}
-            src={user?.image}
-            referrerPolicy="no-referrer"
-          />
-          <Avatar.Fallback>{getFallbackName()}</Avatar.Fallback>
-        </Avatar>
-        <div className="text-left hidden lg:block max-w-[120px]">
-          <p className="text-label-md text-on-surface leading-none truncate">
+        <Avatar
+          src={user?.image}
+          name={user?.name}
+          alt=""
+          size="2xs"
+          referrerPolicy="no-referrer"
+        />
+        <span className="hidden max-w-[120px] text-left lg:block">
+          <span className="block truncate text-label-md leading-none text-on-surface">
             {user?.name}
-          </p>
+          </span>
+        </span>
+        <ChevronDown className="hidden size-4 shrink-0 text-on-surface-variant sm:block" />
+      </button>
+
+      {open && (
+        <div
+          id={menuId}
+          role="menu"
+          className="absolute right-0 top-full z-50 mt-2 min-w-[180px] overflow-hidden rounded-2xl border border-primary-container/20 bg-surface/90 p-1.5 shadow-2xl backdrop-blur-lg"
+        >
+          {ITEMS.map(({ key, label, icon: Icon, tone }) => (
+            <button
+              key={key}
+              type="button"
+              role="menuitem"
+              onClick={() => handleAction(key)}
+              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-label-md text-on-surface transition-colors hover:bg-surface-container-high"
+            >
+              <Icon aria-hidden="true" className={`size-4 shrink-0 ${tone}`} />
+              {label}
+            </button>
+          ))}
         </div>
-        <ChevronDown className="w-4 h-4 text-on-surface-variant hidden sm:block shrink-0" />
-      </Dropdown.Trigger>
-      <Dropdown.Popover placement="bottom end" className="min-w-[180px]">
-        <Dropdown.Menu onAction={handleAction}>
-          <Dropdown.Item id="profile" textValue="Profile">
-            <User className="w-4 h-4 text-primary" />
-            <Label>Profile</Label>
-          </Dropdown.Item>
-          <Dropdown.Item id="logout" textValue="Sign Out" variant="danger">
-            <LogOut className="w-4 h-4" />
-            <Label>Sign Out</Label>
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown.Popover>
-    </Dropdown>
+      )}
+    </div>
   );
 };
 

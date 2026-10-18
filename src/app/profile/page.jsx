@@ -1,96 +1,88 @@
 "use client";
 
+import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Section } from "@/components/ui/Section";
+import { Spinner } from "@/components/ui/Spinner";
 import { authClient } from "@/lib/auth-client";
-import { Avatar, Card } from "@heroui/react";
 import { Mail, User } from "lucide-react";
 import Link from "next/link";
+
+const META_ICON = "size-[18px] shrink-0 text-primary";
 
 export default function ProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
-  const getFallbackName = () => {
-    if (user?.name) {
-      return user.name.trim().charAt(0).toUpperCase();
-    }
-    return "M";
-  };
-
   if (isPending) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 flex items-center justify-center">
-        <div className="w-32 h-8 bg-gray-200 dark:bg-zinc-800 animate-pulse rounded-full" />
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner size="lg" label="Loading your profile" />
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 flex flex-col items-center justify-center px-4 text-center">
-        <p className="text-gray-600 dark:text-zinc-400 mb-4">
-          Please sign in to view your profile.
+      <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
+        <Eyebrow>Profile</Eyebrow>
+        <p className="mt-3 text-body-lg text-on-surface">
+          Sign in to view your profile.
         </p>
-        <Link
-          href="/sign-in"
-          className="px-6 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold"
-        >
+        <Button as={Link} href="/sign-in" className="mt-6">
           Sign In
-        </Link>
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
-          My Profile
-        </h1>
-        <p className="text-sm text-gray-500 dark:text-zinc-400 mb-8">
-          Manage your MediQueue account information
-        </p>
+    <Section tone="surface" spacing="lg">
+      <div className="mx-auto w-full max-w-3xl">
+        <div className="text-center">
+          <Eyebrow>Account</Eyebrow>
+          <h1 className="mt-3 text-headline-lg text-on-surface">My Profile</h1>
+          <p className="mt-2 text-body-md text-on-surface-variant">
+            Your MediQueue account details.
+          </p>
+        </div>
 
-        <Card className="p-8 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm rounded-3xl">
-          <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-            <Avatar className="w-24 h-24">
-              <Avatar.Image
-                alt={user.name || "User"}
-                src={user.image}
-                referrerPolicy="no-referrer"
-              />
-              <Avatar.Fallback className="text-2xl">
-                {getFallbackName()}
-              </Avatar.Fallback>
-            </Avatar>
+        <Card padding="lg" shadow="md" className="mt-8">
+          <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
+            <Avatar
+              src={user.image}
+              name={user.name}
+              alt=""
+              size="lg"
+              referrerPolicy="no-referrer"
+            />
 
-            <div className="space-y-4 flex-1 w-full">
-              <div className="flex items-center gap-3 justify-center sm:justify-start">
-                <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    Full Name
-                  </p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+            <dl className="w-full flex-1 space-y-5">
+              <div className="flex items-center gap-3">
+                <User aria-hidden="true" className={META_ICON} />
+                <div className="min-w-0">
+                  <dt className="text-label-sm uppercase text-outline">Full Name</dt>
+                  <dd className="truncate text-headline-sm text-on-surface">
                     {user.name || "—"}
-                  </p>
+                  </dd>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 justify-center sm:justify-start">
-                <Mail className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    Email
-                  </p>
-                  <p className="text-base font-medium text-gray-700 dark:text-zinc-300">
+              <div className="flex items-center gap-3">
+                <Mail aria-hidden="true" className={META_ICON} />
+                <div className="min-w-0">
+                  <dt className="text-label-sm uppercase text-outline">Email</dt>
+                  <dd className="truncate text-body-md text-on-surface">
                     {user.email || "—"}
-                  </p>
+                  </dd>
                 </div>
               </div>
-            </div>
+            </dl>
           </div>
         </Card>
       </div>
-    </div>
+    </Section>
   );
 }

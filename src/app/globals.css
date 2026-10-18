@@ -3,11 +3,12 @@
    .dark re-points --mq-* so one utility serves both themes, no dark: variants. */
 
 @import "tailwindcss";
-@import "@heroui/styles";
 
-/* Class-driven dark, matching code.html's darkMode:"class". Overrides HeroUI's
-   variant, whose prefers-color-scheme fallback would beat an explicit light
-   choice. layout.js folds the system preference into these selectors pre-paint. */
+/* Class-driven dark, matching code.html's darkMode:"class". Tailwind v4's built-in
+   `dark` is a prefers-color-scheme media query, which would ignore an explicit
+   light choice; this re-points it at the class that ThemeToggle sets. No component
+   uses a dark: utility today — the theme is carried by the --mq-* tokens below —
+   but any future one has to resolve against the toggle, not the OS. */
 @custom-variant dark (&:is(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
@@ -284,28 +285,6 @@ body {
   &:hover {
     transform: translateY(-0.25rem);
   }
-}
-
-@utility hero-ambience {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-@utility hero-orb {
-  position: absolute;
-  border-radius: 9999px;
-  pointer-events: none;
-  filter: blur(140px);
-}
-
-@utility hero-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.035;
-  background-image: radial-gradient(var(--mq-surface-tint) 1px, transparent 1px);
-  background-size: 24px 24px;
 }
 
 @media (prefers-reduced-motion: reduce) {

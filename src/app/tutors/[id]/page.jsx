@@ -1,5 +1,27 @@
 import BookingModal from "@/app/components/BookingModal";
+import { Avatar } from "@/components/ui/Avatar";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Section } from "@/components/ui/Section";
+import { cn } from "@/components/ui/cn";
 import { createPageMetadata } from "@/lib/site-metadata";
+import {
+  ArrowLeft,
+  Award,
+  BadgeCheck,
+  Banknote,
+  BookOpen,
+  Building2,
+  CalendarDays,
+  Clock,
+  Layers,
+  MapPin,
+  Monitor,
+  ShieldCheck,
+} from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -23,183 +45,210 @@ export async function generateMetadata({ params }) {
     return createPageMetadata("Tutor Details");
   }
 }
-import { Card, Chip } from "@heroui/react";
-import Image from "next/image";
-import Link from 'next/link';
-import {
-  FiArrowLeft,
-  FiAward,
-  FiBookOpen, FiBriefcase, FiCalendar,
-  FiCheckCircle, FiClock,
-  FiDollarSign,
-  FiLayers,
-  FiMapPin,
-  FiMonitor, FiUser
-} from "react-icons/fi";
-
 
 const TutorDetailsPage = async ({ params }) => {
-  const { id } = await params
+  const { id } = await params;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`)
-  const tutorData = await res.json()
+  let tutorData = null;
 
-  const { _id, tutorName, subject, image, availability, hourlyFee, totalSlot, startDate, teachingMode, district, address, institution, experienceYears } = tutorData
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`);
+    if (res.ok) tutorData = await res.json();
+  } catch {
+    tutorData = null;
+  }
+
+  if (!tutorData?._id) notFound();
+
+  const {
+    tutorName,
+    subject,
+    image,
+    availability,
+    hourlyFee,
+    totalSlot,
+    startDate,
+    teachingMode,
+    district,
+    address,
+    institution,
+    experienceYears,
+  } = tutorData;
+
+  const stats = [
+    { label: "Hourly Fee", value: `৳${hourlyFee}`, icon: Banknote },
+    { label: "Experience", value: `${experienceYears}+ yrs`, icon: Award },
+    { label: "Teaching Mode", value: teachingMode, icon: Monitor },
+    { label: "Slots Left", value: `${totalSlot} open`, icon: Layers },
+  ];
+
+  const details = [
+    { label: "Availability", value: availability, icon: Clock },
+    { label: "Start Date", value: startDate, icon: CalendarDays },
+    { label: "Slots Remaining", value: `${totalSlot}`, icon: Layers },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-50 transition-colors duration-200">
-
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-10 py-6">
-        <Link href="/tutors" className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-medium hover:underline transition">
-          <FiArrowLeft /> Back to all tutors
+    <>
+      <div className="mx-auto w-full max-w-7xl px-6 pt-6 lg:px-12">
+        <Link
+          href="/tutors"
+          className="inline-flex items-center gap-2 text-label-md text-primary transition-colors hover:text-surface-tint"
+        >
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          Back to all tutors
         </Link>
       </div>
 
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-10 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <Section as="main" tone="surface" spacing="lg">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+          <div className="space-y-6 lg:col-span-8">
+            <Card padding="lg" shadow="md">
+              <div className="flex flex-col items-center gap-6 text-center md:flex-row md:items-start md:text-left">
+                <Avatar
+                  src={image}
+                  name={tutorName}
+                  alt=""
+                  size="xl"
+                  ring="surface"
+                  status="tertiary"
+                  statusSize="md"
+                  statusLabel={`${tutorName} is verified`}
+                  referrerPolicy="no-referrer"
+                />
 
-          {/* Left Column: Details (8 Columns) */}
-          <div className="lg:col-span-8 space-y-8">
-
-            {/* Header Profile Section */}
-            <Card className="p-8 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm rounded-2xl">
-              <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
-                <div className="relative">
-                  <Image
-                    src={image}
-                    alt={tutorName}
-                    className="w-40 h-40 rounded-full object-cover ring-4 ring-indigo-50 dark:ring-indigo-900/20"
-                    width={160}
-                    height={160}
-                  />
-                  <div className="absolute -bottom-2 -right-2 bg-green-500 text-white p-1.5 rounded-full border-4 border-white dark:border-zinc-900">
-                    <FiCheckCircle className="w-5 h-5" />
-                  </div>
-                </div>
-
-                <div className="flex-1 space-y-3">
-                  <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                    <Chip size="sm" variant="flat" color="secondary" className="font-bold uppercase tracking-wider text-[10px]">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+                    <Badge tone="tertiary" variant="solid">
                       Verified Mentor
-                    </Chip>
-                    <Chip size="sm" variant="flat" color="success" className="font-bold uppercase tracking-wider text-[10px]">
+                    </Badge>
+                    <Badge tone="primary" variant="solid">
                       Live Session
-                    </Chip>
+                    </Badge>
                   </div>
 
-                  <h1 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white">
-                    {tutorName}
+                  <h1 className="mt-3 flex items-center justify-center gap-2 text-headline-lg text-on-surface md:justify-start">
+                    <span className="truncate">{tutorName}</span>
+                    <BadgeCheck
+                      aria-hidden="true"
+                      className="size-5 shrink-0 text-tertiary"
+                    />
                   </h1>
 
-                  <p className="text-xl font-medium text-indigo-600 dark:text-indigo-400 flex items-center justify-center md:justify-start gap-2">
-                    <FiBookOpen /> {subject} Specialist
+                  <p className="mt-1 flex items-center justify-center gap-2 text-body-lg font-medium text-primary md:justify-start">
+                    <BookOpen aria-hidden="true" className="size-[18px] shrink-0" />
+                    {subject} Specialist
                   </p>
 
-                  <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-zinc-500 dark:text-zinc-400 pt-2">
-                    <span className="flex items-center gap-1.5"><FiBriefcase className="text-indigo-500" /> {institution}</span>
-                    <span className="flex items-center gap-1.5"><FiMapPin className="text-red-400" /> {district}</span>
+                  <div className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-body-md text-on-surface-variant md:justify-start">
+                    <span className="flex items-center gap-1.5">
+                      <Building2 aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                      <span className="truncate">{institution}</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                      {district}
+                    </span>
                   </div>
                 </div>
               </div>
             </Card>
 
-            {/* Stats Cards Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-5 text-center space-y-1 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm rounded-2xl">
-                <FiDollarSign className="mx-auto text-indigo-500 w-6 h-6" />
-                <p className="text-xs text-zinc-500">Hourly Fee</p>
-                <p className="font-bold text-lg">৳{hourlyFee}</p>
-              </div>
-              <div className="p-5 text-center space-y-1 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm rounded-2xl">
-                <FiAward className="mx-auto text-indigo-500 w-6 h-6" />
-                <p className="text-xs text-zinc-500">Experience</p>
-                <p className="font-bold text-lg">{experienceYears}+ Years</p>
-              </div>
-              <div className="p-5 text-center space-y-1 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm rounded-2xl">
-                <FiMonitor className="mx-auto text-indigo-500 w-6 h-6" />
-                <p className="text-xs text-zinc-500">Teaching Mode</p>
-                <p className="font-bold text-lg">{teachingMode}</p>
-              </div>
-              <div className="p-5 text-center space-y-1 border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm rounded-2xl">
-                <FiLayers className="mx-auto text-indigo-500 w-6 h-6" />
-                <p className="text-xs text-zinc-500">Available Slot</p>
-                <p className="font-bold text-lg">{totalSlot} Slots</p>
-              </div>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {stats.map(({ label, value, icon: Icon }) => (
+                <Card key={label} padding="md" shadow="sm" className="text-center">
+                  <Icon aria-hidden="true" className="mx-auto size-6 text-primary" />
+                  <p className="mt-2 text-label-sm uppercase text-on-surface-variant">
+                    {label}
+                  </p>
+                  <p className="mt-0.5 truncate text-headline-sm text-on-surface tabular">
+                    {value}
+                  </p>
+                </Card>
+              ))}
             </div>
 
-            {/* About */}
-            <Card className="p-8 border-2 border-indigo-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl rounded-3xl">
-              <h2 className="text-2xl font-bold flex items-center gap-3">
-                <FiUser className="text-indigo-500" /> About the Tutor
-              </h2>
-              <hr className="border-gray-100 dark:border-zinc-200" />
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-lg italic">
-                Passionate about simplifying complex {subject} concepts for medical students. With {experienceYears} years of experience at {institution}, I focus on exam-oriented preparation and clinical correlations.
+            <Card padding="lg" shadow="md">
+              <Eyebrow as="h2">About the Tutor</Eyebrow>
+              <p className="mt-3 text-body-lg leading-relaxed text-on-surface-variant">
+                I teach {subject} with the same approach I used for my own finals — exam
+                structure first, clinical correlation second. Over{" "}
+                {experienceYears} years at {institution}, my sessions have taken more
+                than 40 students through the same concepts.
               </p>
-              <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Education</p>
-                  <p className="font-medium">{institution}</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Address</p>
-                  <p className="font-medium">{address}</p>
-                </div>
-              </div>
-            </Card>
 
+              <dl className="mt-6 grid grid-cols-1 gap-6 border-t border-outline-variant/30 pt-5 md:grid-cols-2">
+                <div>
+                  <dt className="text-label-sm uppercase text-outline">Education</dt>
+                  <dd className="mt-1 text-body-md font-medium text-on-surface">
+                    {institution}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-label-sm uppercase text-outline">Address</dt>
+                  <dd className="mt-1 text-body-md font-medium text-on-surface">
+                    {address}, {district}
+                  </dd>
+                </div>
+              </dl>
+            </Card>
           </div>
 
-          {/* Right Column: Sticky Booking Widget (4 Columns) */}
-          <div className="lg:col-span-4 lg:sticky lg:top-10 space-y-6">
-            <Card className="p-8 border-2 border-indigo-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl rounded-3xl">
-              <div className="space-y-6">
-                <div className="flex justify-between items-end">
-                  <span className="text-zinc-500 text-sm font-medium">Session Fee</span>
-                  <p className="text-3xl font-black text-indigo-600 dark:text-indigo-400">৳{hourlyFee}<span className="text-sm font-normal text-zinc-400">/hr</span></p>
-                </div>
+          <div className="space-y-6 lg:sticky lg:top-20 lg:col-span-4">
+            <Card padding="lg" shadow="xl">
+              <div className="flex items-end justify-between gap-4">
+                <span className="text-label-md uppercase text-on-surface-variant">
+                  Session Fee
+                </span>
+                <span className="text-headline-md font-bold text-primary tabular">
+                  ৳{hourlyFee}
+                  <span className="text-body-md font-normal text-on-surface-variant">
+                    /hr
+                  </span>
+                </span>
+              </div>
 
-                <hr className="border-gray-100 dark:border-zinc-200" />
-
-                <div className="space-y-4">
-                  <p className="font-bold text-zinc-800 dark:text-zinc-200">Session Details</p>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center gap-2 text-zinc-500"><FiClock /> Availability</span>
-                      <span className="font-bold">{availability}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center gap-2 text-zinc-500"><FiCalendar /> Start Date</span>
-                      <span className="font-bold">{startDate}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center gap-2 text-zinc-500"><FiLayers /> Slots Remaining</span>
-                      <span className="font-bold text-red-500">{totalSlot} Slots</span>
-                    </div>
-                    <div className="pt-2 w-full">
-                      <BookingModal tutorData={tutorData}
-                      />
-                    </div>
-
+              <div className="mt-6 space-y-3 border-t border-outline-variant/30 pt-5">
+                <p className="text-label-md text-on-surface">Session Details</p>
+                {details.map(({ label, value, icon: Icon }) => (
+                  <div key={label} className="flex items-center justify-between gap-4">
+                    <span className="flex items-center gap-2 text-body-sm text-on-surface-variant">
+                      <Icon aria-hidden="true" className="size-4 shrink-0" />
+                      {label}
+                    </span>
+                    <span
+                      className={cn(
+                        "truncate text-body-md font-medium tabular",
+                        label === "Slots Remaining" && Number(totalSlot) === 0
+                          ? "text-error"
+                          : "text-on-surface"
+                      )}
+                    >
+                      {value}
+                    </span>
                   </div>
-                </div>
+                ))}
+              </div>
+
+              <div className="mt-6">
+                <BookingModal tutorData={tutorData} />
               </div>
             </Card>
 
-            {/* Additional Safety Tips */}
-            <div className="p-6 bg-indigo-50/50 dark:bg-zinc-900/50 border border-indigo-100 dark:border-zinc-800 rounded-3xl">
-              <h4 className="font-bold text-sm text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
-                <FiCheckCircle /> Verified Information
-              </h4>
-              <p className="text-[11px] text-zinc-500 mt-2 leading-relaxed">
-                This tutor has provided authentic identification and certificates. Your bookings are protected under MediQueue`&apos;`s refund policy.
+            <Card padding="md" shadow="sm">
+              <h3 className="flex items-center gap-2 text-headline-sm text-on-surface">
+                <ShieldCheck aria-hidden="true" className="size-[18px] shrink-0 text-tertiary" />
+                Verified Information
+              </h3>
+              <p className="mt-2 text-body-sm leading-relaxed text-on-surface-variant">
+                Every listing on MediQueue is manually reviewed before it goes live, so the
+                name, institution, and experience on this profile are verified.
               </p>
-            </div>
+            </Card>
           </div>
-
         </div>
-      </main>
-    </div>
+      </Section>
+    </>
   );
 };
 

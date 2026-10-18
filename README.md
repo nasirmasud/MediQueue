@@ -41,19 +41,19 @@ The platform connects seamlessly to an external REST API and uses Better Auth pa
 
 - **Credential Sign-In:** Standard Email and Password registration/login flow.
 - **Social Auth:** One-click Google OAuth login integration.
-- **Route Protection:** Strict middleware guard rails blocking unauthenticated access to `/add-tutor`, `/my-tutors`, and `/booked-sessions`.
+- **Route Protection:** `proxy.js` redirects unauthenticated hits on `/add-tutor`, `/my-tutors`, `/booked-sessions`, and `/tutors/[id]` to `/sign-in`. The matcher uses `/tutors/:path` (one segment), so the `/tutors` listing stays public. The redirect carries no `callbackUrl`, so a signed-out user loses their intended destination — tracked for Phase 12.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer                    | Technology                                               |
-| :----------------------- | :------------------------------------------------------- |
-| **Framework**            | Next.js 16 (App Router), React 19                        |
-| **Styling & UI**         | Tailwind CSS 4, DaisyUI, HeroUI components               |
-| **Authentication**       | Better Auth + MongoDB adapter                            |
-| **State & API Handling** | TanStack Query (React Query) / Axios                     |
-| **UI Enhancements**      | Swiper (Carousel), Lucide React (Icons), React Hot Toast |
+| Layer                    | Technology                                                            |
+| :----------------------- | :-------------------------------------------------------------------- |
+| **Framework**            | Next.js 16 (App Router), React 19                                     |
+| **Styling & UI**         | Tailwind CSS 4 tokens (`@theme` in `globals.css`), local primitives in `src/components/ui/` |
+| **Authentication**       | Better Auth + MongoDB adapter                                         |
+| **State & API Handling** | React Server Components for reads; `fetch` + `useState` / `useMemo` on the client. No query cache, no HTTP client |
+| **UI Enhancements**      | Lucide React (icons), React Hot Toast (notifications)                  |
 
 ---
 
@@ -61,7 +61,7 @@ The platform connects seamlessly to an external REST API and uses Better Auth pa
 
 ### Prerequisites
 
-Make sure you have an `.env.local` file configured in your client root folder with the following variables:
+Make sure you have an `.env` file in the client root folder with the following variables:
 
 ```env
 NEXT_PUBLIC_API_URL=your_backend_api_url

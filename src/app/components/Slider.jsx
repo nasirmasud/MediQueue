@@ -46,7 +46,7 @@ const TRAJECTORY_ROWS = [
 
 export default function Slider() {
   return (
-    <section className="relative w-full overflow-hidden bg-[#080614] pt-12 pb-20 lg:pt-16 lg:pb-28 border-b border-outline-variant/30">
+    <section className="relative w-full overflow-hidden bg-[#080614] pt-12 pb-24 lg:pt-16 lg:pb-32 border-b border-outline-variant/30">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[480px] rounded-full bg-primary-container/20 blur-[140px]" />
         <div className="absolute top-1/3 -left-20 w-[420px] h-[420px] rounded-full bg-secondary-container/20 blur-[130px]" />
@@ -65,7 +65,7 @@ export default function Slider() {
           </span>
         </div>
 
-        <div className="text-center max-w-4xl mx-auto">
+        <div className="text-center max-w-6xl mx-auto">
           <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">
             Ace your MBBS Viva with{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-surface-tint to-tertiary drop-shadow-sm">
